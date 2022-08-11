@@ -17,7 +17,7 @@ spring:
     defer-datasource-initialization: true
   datasource:
     # ImMemory
-#    https://chowdera.com/2022/04/202204020358075199.html
+    #    https://chowdera.com/2022/04/202204020358075199.html
     url: jdbc:h2:mem:voting;OLD_INFORMATION_SCHEMA=TRUE
     #    tcp: jdbc:h2:tcp://localhost:9092/mem:voting
     # Absolute path
@@ -36,3 +36,11 @@ spring:
     #  https://docs.spring.io/spring-data/rest/docs/current/reference/html/#getting-started.basic-settings
     basePath: /api
     returnBodyOnCreate: true
+
+#https://nsergey:com/jackson-annotations/:
+#Jackson Serialization Issue Resolver
+#  jackson:
+#    visibility.field: any
+#    visibility.getter: none
+#    visibility.setter: none
+#    visibility.is-getter: none

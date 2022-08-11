@@ -1,5 +1,6 @@
 package ru.schoolservice.arm.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,6 +36,7 @@ public class BaseEntity implements Persistable<Integer> {
     }
 
     @Override
+    @JsonIgnore
     public boolean isNew() {
         return id == null;
     }
