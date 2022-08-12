@@ -1,14 +1,16 @@
 # АРМ контороля посещений учащихся
-
 ---
-
-## Описание изменений системы:
+### Запуск приложения
+`
+java -jar 'filename'.jar
+`
+---
+### Описание изменений системы:
 
 1)  * Монолитный проект для взаимодействия со [СКУД "СИГУР"](https://sigur.com/)
     * [Spring Boot](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/), [Spring Web](https://docs.spring.io/spring-boot/docs/2.7.2/reference/htmlsingle/#web), [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.7.2/reference/htmlsingle/#data.sql.jpa-and-spring-data), [Lombok](https://projectlombok.org/)
     * Добавлена база H2
 2)  
-
 
 ---
 
