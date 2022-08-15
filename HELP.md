@@ -1,9 +1,14 @@
-АРМ контороля посещений учащихся
+## АРМ контороля посещений учащихся
+
 ---
 ### Запуск приложения
 `
 java -jar 'filename'.jar
 `
+---
+
+### [Пример Basic авторизации]( https://efim360.ru/rfc-2617-http-autentifikatsiya-bazovaya-i-daydzhest-autentifikatsiya/ )
+
 ---
 ### Описание изменений системы:
 
@@ -12,13 +17,9 @@ java -jar 'filename'.jar
     * Добавлена база H2
     * [Добавлена BASIC Авторизация]( https://wp-kama.ru/handbook/rest/basic/authentication/basic) 
 2)  
-
 ---
-
 ### Работа с базой H2
 #### Получить доступ ка базе H2
 1) Запустить приложение
 2) [http://localhost:8081/h2-console]()
 3) (URL) => jdbc:h2:mem:voting
----
-### [Пример Basic авторизации]( https://efim360.ru/rfc-2617-http-autentifikatsiya-bazovaya-i-daydzhest-autentifikatsiya/ )

@@ -1,5 +1,12 @@
 server:
   port: 8081
+
+  servlet:
+    encoding:
+      charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly
+      enabled: true # Enable http encoding support
+      force: true
+
   error:
     include-message: always
 #  https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
@@ -37,6 +44,7 @@ spring:
   data.rest:
     #  https://docs.spring.io/spring-data/rest/docs/current/reference/html/#getting-started.basic-settings
     basePath: /api
+    default-page-size: 20
     returnBodyOnCreate: true
 
 #https://nsergey:com/jackson-annotations/:
