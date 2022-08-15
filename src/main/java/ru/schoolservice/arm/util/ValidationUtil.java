@@ -1,8 +1,10 @@
 package ru.schoolservice.arm.util;
 
+import lombok.experimental.UtilityClass;
 import ru.schoolservice.arm.error.IllegalRequestDataException;
 import ru.schoolservice.arm.model.BaseEntity;
 
+@UtilityClass
 public class ValidationUtil {
 
     public static void checkNew(BaseEntity entity) {

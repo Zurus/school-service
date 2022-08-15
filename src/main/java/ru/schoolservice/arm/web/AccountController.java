@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.RepositoryLinksResource;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ import ru.schoolservice.arm.util.ValidationUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.EnumSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -89,15 +91,14 @@ public class AccountController implements RepresentationModelProcessor<Repositor
      * Зарегистрировать пользователя
      *
      * @param user новый пользователь
-     *
      * @return результат регистрации
      */
-    @PostMapping(value = "/register", consumes = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<EntityModel<User>> register(@Valid @RequestBody User user) {
         log.info("register {}", user);
         ValidationUtil.checkNew(user);
-        user.setRoles(Stream.of(Role.USER).collect(Collectors.toSet()));
+        user.setRoles(EnumSet.of(Role.USER));
         user = userRepository.save(user);
         URI uriOfNewResource = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -110,7 +111,7 @@ public class AccountController implements RepresentationModelProcessor<Repositor
     /**
      * Изменить информацию по пользователю
      *
-     * @param user обновленный пользователь
+     * @param user     обновленный пользователь
      * @param authUser авторизованный пользователь
      */
     @PutMapping(consumes = MediaTypes.HAL_JSON_VALUE)
