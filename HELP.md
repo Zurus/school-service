@@ -1,4 +1,4 @@
-# АРМ контороля посещений учащихся
+АРМ контороля посещений учащихся
 ---
 ### Запуск приложения
 `
@@ -10,6 +10,7 @@ java -jar 'filename'.jar
 1)  * Монолитный проект для взаимодействия со [СКУД "СИГУР"](https://sigur.com/)
     * [Spring Boot](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/), [Spring Web](https://docs.spring.io/spring-boot/docs/2.7.2/reference/htmlsingle/#web), [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.7.2/reference/htmlsingle/#data.sql.jpa-and-spring-data), [Lombok](https://projectlombok.org/)
     * Добавлена база H2
+    * [Добавлена BASIC Авторизация]( https://wp-kama.ru/handbook/rest/basic/authentication/basic) 
 2)  
 
 ---
@@ -20,3 +21,4 @@ java -jar 'filename'.jar
 2) [http://localhost:8081/h2-console]()
 3) (URL) => jdbc:h2:mem:voting
 ---
+### [Пример Basic авторизации]( https://efim360.ru/rfc-2617-http-autentifikatsiya-bazovaya-i-daydzhest-autentifikatsiya/ )
