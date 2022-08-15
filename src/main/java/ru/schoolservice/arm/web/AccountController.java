@@ -1,17 +1,14 @@
 package ru.schoolservice.arm.web;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.rest.webmvc.RepositoryLinksResource;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.server.RepresentationModelProcessor;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.http.HttpStatus;
 import org.springframework.data.rest.webmvc.RepositoryLinksResource;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,7 +34,6 @@ import java.util.stream.Stream;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 
-
 /**
  * Do not use {@link org.springframework.data.rest.webmvc.RepositoryRestController (BasePathAwareController}
  * Bugs:
@@ -51,6 +47,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RequestMapping(value = "/api/account")
 @AllArgsConstructor
 @Slf4j
+@Tag(name = "Account Controller")
 public class AccountController implements RepresentationModelProcessor<RepositoryLinksResource> {
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
@@ -64,12 +61,23 @@ public class AccountController implements RepresentationModelProcessor<Repositor
 
     private final UserRepository userRepository;
 
+    /**
+     * Получить информацию по пользователю
+     *
+     * @param authUser авторизованный пользователь
+     * @return информация
+     */
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public EntityModel<User> get(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get {}", authUser);
         return ASSEMBLER.toModel(authUser.getUser());
     }
 
+    /**
+     * Удалить пользователя
+     *
+     * @param authUser авторизованнный пользователь
+     */
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
@@ -77,6 +85,13 @@ public class AccountController implements RepresentationModelProcessor<Repositor
         userRepository.deleteById(authUser.id());
     }
 
+    /**
+     * Зарегистрировать пользователя
+     *
+     * @param user новый пользователь
+     *
+     * @return результат регистрации
+     */
     @PostMapping(value = "/register", consumes = MediaTypes.HAL_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<EntityModel<User>> register(@Valid @RequestBody User user) {
@@ -92,6 +107,12 @@ public class AccountController implements RepresentationModelProcessor<Repositor
         return ResponseEntity.created(uriOfNewResource).body(ASSEMBLER.toModel(user));
     }
 
+    /**
+     * Изменить информацию по пользователю
+     *
+     * @param user обновленный пользователь
+     * @param authUser авторизованный пользователь
+     */
     @PutMapping(consumes = MediaTypes.HAL_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody User user, @AuthenticationPrincipal AuthUser authUser) {
