@@ -1,4 +1,4 @@
-package ru.schoolservice.arm.web;
+package ru.schoolservice.arm;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.schoolservice.arm.AuthUser;
 import ru.schoolservice.arm.model.Role;
 import ru.schoolservice.arm.model.User;
 import ru.schoolservice.arm.repository.UserRepository;
@@ -30,8 +29,6 @@ import ru.schoolservice.arm.util.ValidationUtil;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.EnumSet;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -46,11 +43,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
  * RequestMapping("/${spring.data.rest.basePath}/account") give "Not enough variable values"
  */
 @RestController
-@RequestMapping(value = "/api/account")
+@RequestMapping(value = AccountController.URL)
 @AllArgsConstructor
 @Slf4j
 @Tag(name = "Account Controller")
 public class AccountController implements RepresentationModelProcessor<RepositoryLinksResource> {
+    public static final String URL = "/api/account";
 
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
             new RepresentationModelAssemblerSupport<User, EntityModel<User>>(AccountController.class, (Class<EntityModel<User>>) (Class<?>) EntityModel.class) {
