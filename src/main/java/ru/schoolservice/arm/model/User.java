@@ -25,6 +25,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.EnumSet;
 import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,6 +36,11 @@ import java.util.Set;
 @Setter
 @ToString(callSuper = true, exclude = {"password"})
 public class User extends BaseEntity implements Serializable {
+
+    public User(Integer id, String email, String firstName, String lastName, String password, Set<Role> roles) {
+        this(email, firstName, lastName, password, EnumSet.copyOf(roles));
+        this.id = id;
+    }
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
