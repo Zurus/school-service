@@ -17,6 +17,7 @@ java -jar 'filename'.jar
     * Добавлена база H2
     * [Добавлена BASIC Авторизация]( https://wp-kama.ru/handbook/rest/basic/authentication/basic)
     * Добавлен SWAGGER
+    * Добавлены тесты и кэширование
 2)  
 ---
 ### Работа с базой H2
