@@ -1,35 +1,21 @@
 package ru.schoolservice.arm;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.TypeRef;
-import org.junit.jupiter.api.Assertions;
-import org.springframework.hateoas.client.Traverson;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
-import ru.schoolservice.arm.model.Embadded;
 import ru.schoolservice.arm.model.Role;
 import ru.schoolservice.arm.model.User;
-import ru.schoolservice.arm.model.Users;
 import ru.schoolservice.arm.util.JsonUtil;
 
-import javax.validation.constraints.AssertTrue;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserTestUtil {
