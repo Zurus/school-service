@@ -112,7 +112,7 @@ public class AccountController implements RepresentationModelProcessor<Repositor
      * @param user     обновленный пользователь
      * @param authUser авторизованный пользователь
      */
-    @PutMapping(consumes = MediaTypes.HAL_JSON_VALUE)
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody User user, @AuthenticationPrincipal AuthUser authUser) {
         log.info("update {} to {}", authUser, user);
