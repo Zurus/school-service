@@ -12,8 +12,6 @@ server:
 #  https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 spring:
   jpa:
-    #    todo: spring-boot >2.5.0 uncomment next
-    #    defer-datasource-initialization: true
     show-sql: true
     open-in-view: false
     hibernate:
@@ -25,6 +23,7 @@ spring:
         default_batch_fetch_size: 20
         # https://stackoverflow.com/questions/21257819/what-is-the-difference-between-hibernate-jdbc-fetch-size-and-hibernate-jdbc-batc
         jdbc.batch_size: 20
+    # https://stackoverflow.com/a/67678945/548473
     defer-datasource-initialization: true
   datasource:
     # ImMemory
