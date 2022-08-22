@@ -1,4 +1,4 @@
-package ru.secure_environment.arm.util;
+package ru.secure_environment.arm.util.validation;
 
 import lombok.experimental.UtilityClass;
 import ru.secure_environment.arm.error.IllegalRequestDataException;

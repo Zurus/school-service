@@ -17,6 +17,8 @@ import ru.secure_environment.arm.util.JsonUtil;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.secure_environment.arm.UserTestUtil.USER_MAIL;
+import static ru.secure_environment.arm.util.JsonUtil.writeValue;
 import static ru.secure_environment.arm.web.AccountController.URL;
 import static ru.secure_environment.arm.util.ExceptionTextUtil.idWasNotFound;
 
@@ -26,7 +28,7 @@ public class AccountControllerTest extends AbstractControllerTest {
     private UserRepository userRepository;
 
     @Test
-    @WithUserDetails(value = UserTestUtil.USER_MAIL)
+    @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(URL))
                 .andExpect(status().isOk())
@@ -42,7 +44,7 @@ public class AccountControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = UserTestUtil.USER_MAIL)
+    @WithUserDetails(value = USER_MAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(URL))
                 .andExpect(status().isNoContent());
@@ -55,24 +57,36 @@ public class AccountControllerTest extends AbstractControllerTest {
         User newUser = UserTestUtil.getNew();
         User registered = UserTestUtil.asUser(perform(MockMvcRequestBuilders.post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newUser)))
+                .content(writeValue(newUser)))
                 .andExpect(status().isCreated()).andReturn());
 
         UserTestUtil.assertNoIdEquals(registered, newUser);
     }
 
     @Test
-    @WithUserDetails(value = UserTestUtil.USER_MAIL)
+    @WithUserDetails(value = USER_MAIL)
     void update() throws Exception {
         User updated = UserTestUtil.getUpdated();
         perform(MockMvcRequestBuilders.put(URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .content(writeValue(updated)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
         UserTestUtil.assertEquals(updated, userRepository.findById(UserTestUtil.USER_ID).orElseThrow(
                 () -> new UsernameNotFoundException(idWasNotFound(UserTestUtil.USER_ID))
         ));
+    }
+
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void updateHtmlUnsafe() throws Exception {
+        User updated = UserTestUtil.getUpdated();
+        updated.setFirstName("<script>alert(123)</script>");
+        perform(MockMvcRequestBuilders.put(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(updated)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }

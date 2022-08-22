@@ -26,7 +26,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.secure_environment.arm.model.Role;
 import ru.secure_environment.arm.model.User;
 import ru.secure_environment.arm.repository.UserRepository;
-import ru.secure_environment.arm.util.ValidationUtil;
+import ru.secure_environment.arm.util.validation.ValidationUtil;
 
 import javax.validation.Valid;
 import java.net.URI;

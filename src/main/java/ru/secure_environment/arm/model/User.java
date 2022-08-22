@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.util.StringUtils;
 import ru.secure_environment.arm.util.JsonDeserializers;
+import ru.secure_environment.arm.util.validation.NoHtml;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -45,14 +46,17 @@ public class User extends BaseEntity implements Serializable {
     @Email
     @NotBlank
     @Size(max = 128)
+    @NoHtml
     private String email;
 
     @Column(name = "first_name")
     @Size(max = 128)
+    @NoHtml
     private String firstName;
 
     @Column(name = "last_name")
     @Size(max = 128)
+    @NoHtml
     private String lastName;
 
     @Column(name = "password")
