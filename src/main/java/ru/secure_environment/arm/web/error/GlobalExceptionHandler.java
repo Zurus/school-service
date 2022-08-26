@@ -2,38 +2,87 @@ package ru.secure_environment.arm.web.error;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.secure_environment.arm.error.AppException;
+import ru.secure_environment.arm.util.validation.ValidationUtil;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-@RestController
+import static org.springframework.boot.web.error.ErrorAttributeOptions.Include.MESSAGE;
+
+@RestControllerAdvice
 @AllArgsConstructor
 @Slf4j
+//https://habr.com/ru/post/528116/
+//https://javarush.ru/groups/posts/3289-obrabotka-iskljucheniy-v-kontrollerakh-spring-boot
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private final ErrorAttributes errorAttributes;
 
-    @ExceptionHandler
-    public ResponseEntity<Map<String, Object>> appException(AppException ex, WebRequest request) {
-        log.error("Application Exception", ex);
-        Map<String, Object> body = errorAttributes.getErrorAttributes(request, ex.getOptions());
-        HttpStatus status = ex.getStatus();
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<?> appException(WebRequest request, AppException ex) {
+        log.error("ApplicationException: {}", ex.getMessage());
+        return createResponseEntity(request, ex.getOptions(), null, ex.getStatus());
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<?> entityNotFoundException(WebRequest request, EntityNotFoundException ex) {
+        log.error("EntityNotFoundException: {}", ex.getMessage());
+        return createResponseEntity(request, ErrorAttributeOptions.of(MESSAGE), null, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @NonNull
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(
+            @NonNull Exception ex, Object body, @NonNull HttpHeaders headers, @NonNull HttpStatus status, @NonNull WebRequest request) {
+        log.error("Exception", ex);
+        super.handleExceptionInternal(ex, body, headers, status, request);
+        return createResponseEntity(request, ErrorAttributeOptions.of(), ValidationUtil.getRootCause(ex).getMessage(), status);
+    }
+
+    @NonNull
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            @NonNull HttpHeaders headers, @NonNull HttpStatus status, @NonNull WebRequest request) {
+        return handleBindingErrors(ex.getBindingResult(), request);
+    }
+
+    @NonNull
+    @Override
+    protected ResponseEntity<Object> handleBindException(
+            BindException ex, @NonNull HttpHeaders headers, @NonNull HttpStatus status, @NonNull WebRequest request) {
+        return handleBindingErrors(ex.getBindingResult(), request);
+    }
+
+    private ResponseEntity<Object> handleBindingErrors(BindingResult result, WebRequest request) {
+        String msg = result.getFieldErrors().stream()
+                .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
+                .collect(Collectors.joining("\n"));
+        return createResponseEntity(request, ErrorAttributeOptions.defaults(), msg, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> ResponseEntity<T> createResponseEntity(WebRequest request, ErrorAttributeOptions options, String msg, HttpStatus status) {
+        Map<String, Object> body = errorAttributes.getErrorAttributes(request, options);
+        if (msg != null) {
+            body.put("message", msg);
+        }
         body.put("status", status.value());
         body.put("error", status.getReasonPhrase());
-        return ResponseEntity.status(status).body(body);
+        return (ResponseEntity<T>) ResponseEntity.status(status).body(body);
     }
-
-    @Override
-    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        log.error("Exception", ex);
-        return super.handleExceptionInternal(ex, body, headers, status, request);
-    }
-
 }
