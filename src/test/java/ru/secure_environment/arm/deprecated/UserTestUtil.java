@@ -1,38 +1,25 @@
-package ru.secure_environment.arm;
+package ru.secure_environment.arm.deprecated;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
-import ru.secure_environment.arm.model.Role;
 import ru.secure_environment.arm.model.User;
 import ru.secure_environment.arm.util.JsonUtil;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static ru.secure_environment.arm.web.user.UserTestData.admin;
+import static ru.secure_environment.arm.web.user.UserTestData.user;
 
+@Deprecated
 public class UserTestUtil {
-    public static final int USER_ID = 1;
-    public static final int ADMIN_ID = 2;
-    public static final String USER_MAIL = "user@gmail.com";
-    public static final String ADMIN_MAIL = "admin@javaops.ru";
-    public static final User user = new User(USER_ID, USER_MAIL, "User_First", "User_Last", "password", EnumSet.of(Role.USER));
-    public static final User admin = new User(ADMIN_ID, ADMIN_MAIL, "Admin_First", "Admin_Last", "admin", EnumSet.of(Role.USER, Role.ADMIN));
-
-    public static User getNew() {
-        return new User(null, "new@gmail.com", "New_First", "New_Last", "newpass", EnumSet.of(Role.USER));
-    }
-
-    public static User getUpdated() {
-        return new User(USER_ID, "user_update@gmail.com", "User_First_Update", "User_Last_Update", "password_update", EnumSet.of(Role.USER));
-    }
 
     public static List<User> users = Arrays.asList(user, admin);
 
