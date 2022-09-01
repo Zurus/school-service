@@ -82,7 +82,7 @@ public class AccountControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void updateHtmlUnsafe() throws Exception {
         User updated = UserTestUtil.getUpdated();
-        updated.setFirstName("<script>alert(123)</script>");
+        updated.setName("<script>alert(123)</script>");
         perform(MockMvcRequestBuilders.put(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(updated)))

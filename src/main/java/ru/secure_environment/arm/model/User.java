@@ -37,8 +37,8 @@ import java.util.Set;
 @Setter
 public class User extends BaseEntity implements Serializable {
 
-    public User(Integer id, String email, String firstName, String lastName, String password, Set<Role> roles) {
-        this(email, firstName, lastName, password, roles.isEmpty() ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles));
+    public User(Integer id, String email, String name, String password, Set<Role> roles) {
+        this(email, name, password, roles.isEmpty() ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles));
         this.id = id;
     }
 
@@ -49,15 +49,10 @@ public class User extends BaseEntity implements Serializable {
     @NoHtml
     private String email;
 
-    @Column(name = "first_name")
+    @Column(name = "name")
     @Size(max = 128)
     @NoHtml
-    private String firstName;
-
-    @Column(name = "last_name")
-    @Size(max = 128)
-    @NoHtml
-    private String lastName;
+    private String name;
 
     @Column(name = "password")
     @Size(max = 256)

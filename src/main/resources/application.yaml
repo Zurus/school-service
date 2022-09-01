@@ -69,3 +69,6 @@ logging:
     root: WARN
     ru.schoolservice.arm: DEBUG
 #    org.springframework.security.web.FilterChainProxy: DEBUG
+
+sigur:
+  url: "localhost"

@@ -7,11 +7,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.rest.webmvc.RepositoryLinksResource;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.http.MediaType;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.secure_environment.arm.dto.UserDto;
+import ru.secure_environment.arm.mapping.UserMapper;
 import ru.secure_environment.arm.model.Role;
 import ru.secure_environment.arm.model.User;
 import ru.secure_environment.arm.repository.UserRepository;
@@ -49,19 +49,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @AllArgsConstructor
 @Slf4j
 @Tag(name = "Account Controller")
-public class AccountController implements RepresentationModelProcessor<RepositoryLinksResource> {
+public class AccountController {
     public static final String URL = "/api/account";
 
-    private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
-            new RepresentationModelAssemblerSupport<User, EntityModel<User>>(AccountController.class, (Class<EntityModel<User>>) (Class<?>) EntityModel.class) {
-                @Override
-                public EntityModel<User> toModel(User entity) {
-                    return EntityModel.of(entity, linkTo(AccountController.class).withSelfRel());
-                }
-            };
-
-
     private final UserRepository userRepository;
+    private final UserMapper USER_MAPPER;
 
     /**
      * Получить информацию по пользователю
@@ -69,10 +61,10 @@ public class AccountController implements RepresentationModelProcessor<Repositor
      * @param authUser авторизованный пользователь
      * @return информация
      */
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
-    public EntityModel<User> get(@AuthenticationPrincipal AuthUser authUser) {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserDto get(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get {}", authUser);
-        return ASSEMBLER.toModel(authUser.getUser());
+        return USER_MAPPER.toDTO(authUser.getUser());
     }
 
     /**
@@ -97,7 +89,7 @@ public class AccountController implements RepresentationModelProcessor<Repositor
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<EntityModel<User>> register(@Valid @RequestBody User user) {
+    public ResponseEntity<UserDto> register(@Valid @RequestBody User user) {
         log.info("register {}", user);
         ValidationUtil.checkNew(user);
         user.setRoles(EnumSet.of(Role.USER));
@@ -107,7 +99,7 @@ public class AccountController implements RepresentationModelProcessor<Repositor
                 .path("/api/account")
                 .build().toUri();
 
-        return ResponseEntity.created(uriOfNewResource).body(ASSEMBLER.toModel(user));
+        return ResponseEntity.created(uriOfNewResource).body(USER_MAPPER.toDTO(user));
     }
 
     /**
@@ -119,7 +111,7 @@ public class AccountController implements RepresentationModelProcessor<Repositor
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CachePut(value = "users", key = "#authUser.username")
-    public User update(@Valid @RequestBody User user, @AuthenticationPrincipal AuthUser authUser) {
+    public UserDto update(@Valid @RequestBody User user, @AuthenticationPrincipal AuthUser authUser) {
         log.info("update {} to {}", authUser, user);
         User oldUser = authUser.getUser();
         ValidationUtil.assureIdConsistent(user, oldUser.id());
@@ -127,7 +119,7 @@ public class AccountController implements RepresentationModelProcessor<Repositor
         if (user.getPassword() == null) {
             user.setPassword(oldUser.getPassword());
         }
-        return userRepository.save(user);
+        return USER_MAPPER.toDTO(userRepository.save(user));
     }
 
     /*
@@ -137,10 +129,4 @@ public class AccountController implements RepresentationModelProcessor<Repositor
         return pagedAssembler.toModel(users, ASSEMBLER);
     }
 */
-
-    @Override
-    public RepositoryLinksResource process(RepositoryLinksResource resource) {
-        resource.add(linkTo(AccountController.class).withRel("account"));
-        return resource;
-    }
 }
