@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 //https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing-spring-boot-applications-testing-with-mock-environment
 public class AbstractControllerTest {
 
-
     @Autowired
     //https://sysout.ru/testirovanie-kontrollerov-s-pomoshhyu-mockmvc/
     private MockMvc mockMvc;

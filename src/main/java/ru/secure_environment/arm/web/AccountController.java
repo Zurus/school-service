@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.RepositoryLinksResource;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.secure_environment.arm.dto.UserDto;
+import ru.secure_environment.arm.mapping.UserListMapper;
 import ru.secure_environment.arm.mapping.UserMapper;
 import ru.secure_environment.arm.model.Role;
 import ru.secure_environment.arm.model.User;
@@ -31,6 +34,7 @@ import ru.secure_environment.arm.util.validation.ValidationUtil;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.EnumSet;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -45,7 +49,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
  * RequestMapping("/${spring.data.rest.basePath}/account") give "Not enough variable values"
  */
 @RestController
-@RequestMapping(value = AccountController.URL)
+@RequestMapping(value = AccountController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
 @Tag(name = "Account Controller")
@@ -54,79 +58,31 @@ public class AccountController {
 
     private final UserRepository userRepository;
     private final UserMapper USER_MAPPER;
+    private final UserListMapper USER_LIST_MAPPER;
 
-    /**
-     * Получить информацию по пользователю
-     *
-     * @param authUser авторизованный пользователь
-     * @return информация
-     */
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public UserDto get(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("get {}", authUser);
-        return USER_MAPPER.toDTO(authUser.getUser());
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> get(@PathVariable int id) {
+        log.info("get {}", id);
+        return ResponseEntity.of(userRepository.findById(id));
     }
 
-    /**
-     * Удалить пользователя
-     *
-     * @param authUser авторизованнный пользователь
-     */
-    @DeleteMapping
+
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "users", key = "#authUser.username")
-    public void delete(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("delete {}", authUser);
-        userRepository.deleteById(authUser.id());
-        log.info("жи есть!");
+    public void delete(@PathVariable int id) {
+        log.info("delete {}", id);
+        userRepository.deleteExisted(id);
     }
 
-    /**
-     * Зарегистрировать пользователя
-     *
-     * @param user новый пользователь
-     * @return результат регистрации
-     */
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<UserDto> register(@Valid @RequestBody User user) {
-        log.info("register {}", user);
-        ValidationUtil.checkNew(user);
-        user.setRoles(EnumSet.of(Role.USER));
-        user = userRepository.save(user);
-        URI uriOfNewResource = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/api/account")
-                .build().toUri();
-
-        return ResponseEntity.created(uriOfNewResource).body(USER_MAPPER.toDTO(user));
+    @GetMapping("/users")
+    public List<User> getAll() {
+        log.info("getAll");
+        return userRepository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));
     }
 
-    /**
-     * Изменить информацию по пользователю
-     *
-     * @param user     обновленный пользователь
-     * @param authUser авторизованный пользователь
-     */
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CachePut(value = "users", key = "#authUser.username")
-    public UserDto update(@Valid @RequestBody User user, @AuthenticationPrincipal AuthUser authUser) {
-        log.info("update {} to {}", authUser, user);
-        User oldUser = authUser.getUser();
-        ValidationUtil.assureIdConsistent(user, oldUser.id());
-        user.setRoles(oldUser.getRoles());
-        if (user.getPassword() == null) {
-            user.setPassword(oldUser.getPassword());
-        }
-        return USER_MAPPER.toDTO(userRepository.save(user));
-    }
-
-    /*
-    @GetMapping(value = "/pageDemo", produces = MediaTypes.HAL_JSON_VALUE)
-    public PagedModel<EntityModel<User>> pageDemo(Pageable page, PagedResourcesAssembler<User> pagedAssembler) {
-        Page<User> users = userRepository.findAll(page);
-        return pagedAssembler.toModel(users, ASSEMBLER);
-    }
-*/
+//    @GetMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public List<UserDto> getUsers() {
+//        return USER_LIST_MAPPER.toUserDtoList(userRepository.getAllBy());
+//    }
 }

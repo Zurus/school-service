@@ -1,92 +1,124 @@
 package ru.secure_environment.arm.web;
 
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.secure_environment.arm.UserTestUtil;
 import ru.secure_environment.arm.model.User;
 import ru.secure_environment.arm.repository.UserRepository;
-import ru.secure_environment.arm.util.JsonUtil;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.secure_environment.arm.UserTestUtil.USER_MAIL;
-import static ru.secure_environment.arm.util.JsonUtil.writeValue;
-import static ru.secure_environment.arm.web.AccountController.URL;
-import static ru.secure_environment.arm.util.ExceptionTextUtil.idWasNotFound;
+import static ru.secure_environment.arm.UserTestUtil.*;
 
 public class AccountControllerTest extends AbstractControllerTest {
+
+    private static final String REST_URL = AccountController.URL + '/';
 
     @Autowired
     private UserRepository userRepository;
 
     @Test
-    @WithUserDetails(value = USER_MAIL)
+    @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(URL))
+        perform(MockMvcRequestBuilders.get(REST_URL + ADMIN_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON_VALUE))
-                .andExpect(UserTestUtil.jsonMatcher(UserTestUtil.user, UserTestUtil::assertNoIdEquals));
+                // https://jira.spring.io/browse/SPR-14472
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(USER_MATCHER.contentJson(admin));
     }
 
     @Test
-    void getUnAuth() throws Exception {
-        perform(MockMvcRequestBuilders.get(URL))
-                .andExpect(status().isUnauthorized());
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + NOT_FOUND))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithUserDetails(value = USER_MAIL)
+    @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(URL))
-                .andExpect(status().isNoContent());
-        Assertions.assertFalse(userRepository.findById(UserTestUtil.USER_ID).isPresent());
-        Assertions.assertTrue(userRepository.findById(UserTestUtil.ADMIN_ID).isPresent());
-    }
-
-    @Test
-    void register() throws Exception {
-        User newUser = UserTestUtil.getNew();
-        User registered = UserTestUtil.asUser(perform(MockMvcRequestBuilders.post(URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(newUser)))
-                .andExpect(status().isCreated()).andReturn());
-
-        UserTestUtil.assertNoIdEquals(registered, newUser);
-    }
-
-    @Test
-    @WithUserDetails(value = USER_MAIL)
-    void update() throws Exception {
-        User updated = UserTestUtil.getUpdated();
-        perform(MockMvcRequestBuilders.put(URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(updated)))
+        perform(MockMvcRequestBuilders.delete(REST_URL + USER_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-
-        UserTestUtil.assertEquals(updated, userRepository.findById(UserTestUtil.USER_ID).orElseThrow(
-                () -> new UsernameNotFoundException(idWasNotFound(UserTestUtil.USER_ID))
-        ));
+        assertFalse(userRepository.findById(USER_ID).isPresent());
     }
 
     @Test
-    @WithUserDetails(value = USER_MAIL)
-    void updateHtmlUnsafe() throws Exception {
-        User updated = UserTestUtil.getUpdated();
-        updated.setName("<script>alert(123)</script>");
-        perform(MockMvcRequestBuilders.put(URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(updated)))
+    @WithUserDetails(value = ADMIN_MAIL)
+    void deleteNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getAll() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "users"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(USER_MATCHER.contentJson(admin, user));
+    }
+
+//    @Test
+//    @WithUserDetails(value = ADMIN_MAIL)
+//    void get() throws Exception {
+//        perform(MockMvcRequestBuilders.get(REST_URL + ADMIN_ID))
+//                .andExpect(status().isOk())
+//                .andDo(print())
+//                // https://jira.spring.io/browse/SPR-14472
+//                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+//                .andExpect(USER_MATCHER.contentJson(admin));
+//    }
+//
+//
+//    @Test
+//    @WithUserDetails(value = ADMIN_MAIL)
+//    void getNotFound() throws Exception {
+//        perform(MockMvcRequestBuilders.get(REST_URL + NOT_FOUND))
+//                .andDo(print())
+//                .andExpect(status().isNotFound());
+//    }
+//
+//
+//    @Test
+//    @WithUserDetails(value = ADMIN_MAIL)
+//    void delete() throws Exception {
+//        perform(MockMvcRequestBuilders.delete(REST_URL + USER_ID))
+//                .andDo(print())
+//                .andExpect(status().isNoContent());
+//
+//        assertFalse(userRepository.findById(USER_ID).isPresent());
+//    }
+//
+//    @Test
+//    @WithUserDetails(value = ADMIN_MAIL)
+//    void deleteNotFound() throws Exception {
+//        perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND))
+//                .andDo(print())
+//                .andExpect(status().isUnprocessableEntity());
+//    }
+//
+//    @Test
+//    @WithUserDetails(value = ADMIN_MAIL)
+//    void update() throws Exception {
+//        User updated = getUpdated();
+//        updated.setId(null);
+//        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(jsonWithPassword(updated, "newPass")))
+//                .andDo(print())
+//                .andExpect(status().isNoContent());
+//
+//        USER_MATCHER.assertMatch(userRepository.getById(USER_ID), getUpdated());
+//    }
+
+
 }
