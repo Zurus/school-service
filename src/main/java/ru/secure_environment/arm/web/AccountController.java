@@ -54,7 +54,8 @@ public class AccountController extends AbstractUserController {
     @Transactional
     public void update(@Valid @RequestBody UserDto userDto, @PathVariable int id) {
         log.info("update {} with id={}", userDto, id);
-        User user = repository.getById(id);
+        User user = new User();
+        user.setId(id);
         user.updateFromDto(userDto);
         assureIdConsistent(user, id);
         prepareAndSave(user);
