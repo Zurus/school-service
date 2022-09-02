@@ -68,7 +68,14 @@ logging:
   level:
     root: WARN
     ru.schoolservice.arm: DEBUG
-#    org.springframework.security.web.FilterChainProxy: DEBUG
+  #    org.springframework.security.web.FilterChainProxy: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+#        include: "*"
+          exclude: "env,beans"
 
 sigur:
   url: "localhost"

@@ -2,7 +2,6 @@ package ru.secure_environment.arm.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +9,8 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.StringUtils;
+import ru.secure_environment.arm.dto.UserDto;
+import ru.secure_environment.arm.model.common.HasId;
 import ru.secure_environment.arm.util.JsonDeserializers;
 import ru.secure_environment.arm.util.validation.NoHtml;
 
@@ -25,23 +26,34 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.Set;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
-public class User extends BaseEntity implements Serializable {
+public class User extends BaseEntity implements Serializable, HasId {
+
+    public User(User user) {
+        this(user.getId(), user.getEmail(), user.getName(), user.getPassword(), user.getRoles().isEmpty() ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(user.getRoles()));
+        this.id = id;
+    }
 
     public User(Integer id, String email, String name, String password, Set<Role> roles) {
         this(email, name, password, roles.isEmpty() ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles));
         this.id = id;
+    }
+
+    public void updateFromDto(UserDto dto) {
+        setIfNotNull(this::setPassword, dto.getPassword());
+        setIfNotNull(this::setEmail, dto.getEmail());
+        setIfNotNull(this::setName, dto.getName());
+        setIfNotNull(this::setRoles, dto.getRoles());
     }
 
     @Column(name = "email", nullable = false, unique = true)

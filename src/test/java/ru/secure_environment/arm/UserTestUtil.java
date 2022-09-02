@@ -17,7 +17,7 @@ public class UserTestUtil {
     public static final User user = new User(USER_ID, USER_MAIL, "User", "password", EnumSet.of(Role.USER));
     public static final User admin = new User(ADMIN_ID, ADMIN_MAIL, "Admin", "admin", EnumSet.of(Role.USER, Role.ADMIN));
 
-    public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered", "password");
+    public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "password");
 
     public static User getNew() {
         return new User(null, "new@gmail.com", "New_First", "newpass", EnumSet.of(Role.USER));

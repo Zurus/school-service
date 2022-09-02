@@ -1,50 +1,48 @@
 package ru.secure_environment.arm.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.secure_environment.arm.web.AuthUser;
+import org.springframework.security.web.SecurityFilterChain;
 import ru.secure_environment.arm.model.Role;
 import ru.secure_environment.arm.model.User;
 import ru.secure_environment.arm.repository.UserRepository;
-import ru.secure_environment.arm.util.JsonUtil;
+import ru.secure_environment.arm.web.AuthUser;
 
-import javax.annotation.PostConstruct;
 import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
 @Slf4j
 @AllArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig  {
 
     public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final UserRepository userRepository;
-    private final ObjectMapper objectMapper;
 
-    @Autowired
-    void setMapper() {
-        JsonUtil.setObjectMapper(objectMapper);
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PASSWORD_ENCODER;
     }
 
     @Bean
-    @Override
-    public UserDetailsService userDetailsServiceBean() throws Exception {
-        return super.userDetailsServiceBean();
+    public UserDetailsService userDetailsService() {
+        return email -> {
+            log.debug("Authenticating '{}'", email);
+            Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
+            return new AuthUser(optionalUser.orElseThrow(
+                    () -> new UsernameNotFoundException("User '" + email + "' was not found")));
+        };
     }
 
     @Autowired
@@ -59,13 +57,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(PASSWORD_ENCODER);
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                //.antMatchers(HttpMethod.POST, "/api/account").anonymous()
+//                .antMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
+//                .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
+//                .antMatchers("/api/**").authenticated()
                 .antMatchers("/api/account/**").hasRole(Role.ADMIN.name())
                 .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();
+        return http.build();
     }
 }

@@ -1,13 +1,16 @@
 package ru.secure_environment.arm.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.client.RestTemplate;
+import ru.secure_environment.arm.util.JsonUtil;
 
 import java.sql.SQLException;
 import java.time.Duration;
@@ -22,6 +25,7 @@ public class AppConfig {
         return Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082");
     }*/
 
+
     @Profile("!test")
     @Bean(initMethod = "start", destroyMethod = "stop")
     Server h2Server() throws SQLException {
@@ -35,5 +39,10 @@ public class AppConfig {
                 .setConnectTimeout(Duration.ofMillis(3000))
                 .setReadTimeout(Duration.ofMillis(3000))
                 .build();
+    }
+
+    @Autowired
+    void setMapper(ObjectMapper objectMapper) {
+        JsonUtil.setObjectMapper(objectMapper);
     }
 }
