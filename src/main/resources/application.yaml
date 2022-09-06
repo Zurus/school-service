@@ -44,8 +44,8 @@ spring:
     driver-class-name: org.h2.Driver
   h2.console.enabled: true
 
-    #https://nsergey:com/jackson-annotations/:
-#    Jackson Serialization Issue Resolver
+  #https://nsergey:com/jackson-annotations/:
+  #    Jackson Serialization Issue Resolver
   jackson:
     visibility.field: any
     visibility.getter: none
@@ -60,6 +60,7 @@ spring:
 #      roles: USER
 
 logging:
+  config: classpath:logback.xml
   level:
     root: WARN
     ru.schoolservice.arm: DEBUG

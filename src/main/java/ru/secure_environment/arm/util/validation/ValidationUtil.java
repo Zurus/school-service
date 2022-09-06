@@ -1,16 +1,30 @@
 package ru.secure_environment.arm.util.validation;
 
 import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.lang.NonNull;
 import ru.secure_environment.arm.error.IllegalRequestDataException;
 import ru.secure_environment.arm.model.BaseEntity;
+import ru.secure_environment.arm.model.User;
 import ru.secure_environment.arm.model.common.HasId;
+
+import java.util.Objects;
 
 import static ru.secure_environment.arm.util.ExceptionTextUtil.idWasNotFound;
 
 @UtilityClass
 public class ValidationUtil {
+
+    public static void userVerification(User user) {
+        if (user.getIsEmployee() && (StringUtils.isEmpty(user.getJobTitle()) || Objects.nonNull(user.getJobTitle()))) {
+            throw new IllegalRequestDataException("for employee '" + user + "' job title must not be null or empty ");
+        }
+
+        if (user.getIsEmployee() && (StringUtils.isEmpty(user.getClassNumber()) || Objects.nonNull(user.getClassNumber()))) {
+            throw new IllegalRequestDataException("for student '" + user + "' classNumber must not be null or empty");
+        }
+    }
 
     public static void checkNew(BaseEntity entity) {
         if (!entity.isNew()) {

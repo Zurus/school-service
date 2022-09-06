@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.secure_environment.arm.model.User;
 
-import java.util.List;
 import java.util.Optional;
 
 import static ru.secure_environment.arm.util.validation.ValidationUtil.checkModification;
@@ -14,8 +13,8 @@ import static ru.secure_environment.arm.util.validation.ValidationUtil.checkModi
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles")
-    List<User> getAllBy();
+//    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles")
+//    List<User> getAllBy();
 
     @Query("SELECT u FROM User u WHERE u.email = LOWER(:email)")
 //    @Cacheable("users")

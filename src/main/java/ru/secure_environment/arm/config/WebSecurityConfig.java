@@ -25,7 +25,7 @@ import java.util.Optional;
 @EnableWebSecurity
 @Slf4j
 @AllArgsConstructor
-public class WebSecurityConfig  {
+public class WebSecurityConfig {
 
     public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final UserRepository userRepository;
@@ -62,8 +62,9 @@ public class WebSecurityConfig  {
         http.authorizeRequests()
 //                .antMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
 //                .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
-//                .antMatchers("/api/**").authenticated()
+                .antMatchers("/api/**").authenticated()
                 .antMatchers("/api/account/**").hasRole(Role.ADMIN.name())
+                .antMatchers("/api/sigur/update").hasRole(Role.SIGUR.name())
                 .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();

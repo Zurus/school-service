@@ -18,7 +18,7 @@ java -jar 'filename'.jar
     * [Добавлена BASIC Авторизация]( https://wp-kama.ru/handbook/rest/basic/authentication/basic)
     * Добавлен SWAGGER
     * Добавлены тесты и кэширование
-2)  
+2)  * Удалил Hateoas и кэширование
 ---
 ### Работа с базой H2
 #### Получить доступ ка базе H2
