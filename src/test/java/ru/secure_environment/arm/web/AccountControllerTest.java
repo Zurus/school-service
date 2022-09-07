@@ -7,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.secure_environment.arm.mapping.UserListMapper;
 import ru.secure_environment.arm.model.User;
 import ru.secure_environment.arm.repository.UserRepository;
 import ru.secure_environment.arm.util.JsonUtil;

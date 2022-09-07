@@ -136,6 +136,10 @@ public class User extends NamedEntity implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
 
+    @Column(name = "photo")
+    @Size(max = 1024)
+    private byte[] photo;
+
 
     public void setEmail(String email) {
         this.email = StringUtils.hasText(email) ? email.toLowerCase() : null;

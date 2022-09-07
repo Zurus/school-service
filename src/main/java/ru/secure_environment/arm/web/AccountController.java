@@ -29,7 +29,6 @@ import java.util.List;
 
 import static ru.secure_environment.arm.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.secure_environment.arm.util.validation.ValidationUtil.checkNew;
-import static ru.secure_environment.arm.util.validation.ValidationUtil.userVerification;
 
 
 @RestController
@@ -61,15 +60,13 @@ public class AccountController extends AbstractUserController {
     public void update(@Valid @RequestBody User user, @PathVariable int id) {
         log.info("update {} with id={}", user, id);
         assureIdConsistent(user, id);
-        userVerification(user);
         prepareAndSave(user);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
+    public ResponseEntity<User> create(@Valid @RequestBody User user) {
         log.info("create {}", user);
         checkNew(user);
-        userVerification(user);
         User created = prepareAndSave(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(URL + "/{id}")
