@@ -75,7 +75,7 @@ public class User extends NamedEntity implements Serializable {
     @Column(name = "card_id", nullable = false)
     @NotNull
     @NotBlank
-    @Pattern(regexp = "[0-9]{3},[0-9]{6}", message = "Wrong card id")
+    @Pattern(regexp = "[0-9]{3},[0-9]{5}", message = "Wrong card id")
     private String cardId;
 
     @Column(name = "phone_number", nullable = false)

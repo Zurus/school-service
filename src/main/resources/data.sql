@@ -4,7 +4,7 @@ VALUES ('user@gmail.com', 'User', '{noop}password', '+79026165214', '34543-101',
         'asdf'),
        ('admin@javaops.ru', 'Admin', '{noop}admin', '+79872832442', '34543-101', '251,35066', true, null, 'Трудовик',
         false, null),
-       ('sigur@javaops.ru', 'sigur_AI', '{noop}sigur', '+11111111111', '00000-000', '000000-00', true, '', '', null,
+       ('sigur@javaops.ru', 'sigur_AI', '{noop}sigur', '+11111111111', '00000-000', '111,123456', true, '', '', null,
         null);
 
 INSERT INTO USER_ROLE (ROLE, USER_ID)

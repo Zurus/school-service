@@ -20,8 +20,8 @@ public class UserTestUtil {
     public static final String ADMIN_PHONE = "+79872832442";
     public static final String USER_SCHOOL_ID = "34543-101";
     public static final String ADMIN_SCHOOL_ID = "34543-101";
-    public static final String USER_CARD_ID = "524362-80";
-    public static final String ADMIN_CARD_ID = "317252-60";
+    public static final String USER_CARD_ID = "056,35766";
+    public static final String ADMIN_CARD_ID = "251,35066";
     public static final String USER_TELEGRAM = "asdf";
     public static final Boolean USER_IS_EMPLOYEE = false;
     public static final Boolean ADMIN_IS_EMPLOYEE = true;
@@ -60,7 +60,7 @@ public class UserTestUtil {
                     .email("sigur@javaops.ru")
                     .phoneNumber("+11111111111")
                     .schoolId("00000-000")
-                    .cardId("000000-00")
+                    .cardId("111,123456")
                     .isEmployee(true)
                     .classNumber("")
                     .jobTitle("")
