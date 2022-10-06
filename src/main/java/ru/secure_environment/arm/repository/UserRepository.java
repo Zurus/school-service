@@ -20,6 +20,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 //    @Cacheable("users")
     Optional<User> findByEmailIgnoreCase(String email);
 
+
+    @Query("SELECT u FROM User u WHERE u.cardId = :cardId")
+    Optional<User> findByCardId(String cardId);
+
 //    @EntityGraph(attributePaths = {"roles"})
 //    List<User> findAll();
 
@@ -42,6 +46,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query("DELETE FROM User u WHERE u.id=:id")
     int delete(int id);
+
 
     default void deleteExisted(int id) {
         checkModification(delete(id), id);

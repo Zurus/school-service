@@ -71,6 +71,7 @@ public class UserTestUtil {
     public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "password");
     public static final MatcherFactory.Matcher<UserDto> USER_MATCHER_DTO = MatcherFactory.usingIgnoringFieldsComparator(UserDto.class, "password");
 
+
     public static User getNew() {
         User updateUser = new User();
         updateUser.updateUser(user);

@@ -73,5 +73,3 @@ logging:
 ##        include: "*"
 #          exclude: "env,beans"
 
-sigur:
-  url: "localhost"

@@ -33,13 +33,13 @@ public class AppConfig {
         return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092");
     }
 
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder
-                .setConnectTimeout(Duration.ofMillis(3000))
-                .setReadTimeout(Duration.ofMillis(3000))
-                .build();
-    }
+//    @Bean
+//    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+//        return builder
+//                .setConnectTimeout(Duration.ofMillis(3000))
+//                .setReadTimeout(Duration.ofMillis(3000))
+//                .build();
+//    }
 
     @Autowired
     void setMapper(ObjectMapper objectMapper) {

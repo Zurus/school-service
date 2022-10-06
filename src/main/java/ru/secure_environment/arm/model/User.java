@@ -1,7 +1,5 @@
 package ru.secure_environment.arm.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +10,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.secure_environment.arm.util.validation.NoHtml;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -20,6 +19,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -75,7 +75,7 @@ public class User extends NamedEntity implements Serializable {
     @Column(name = "card_id", nullable = false)
     @NotNull
     @NotBlank
-    @Pattern(regexp = "[0-9]{1,6}-[0-9]{1,4}", message = "Wrong card id")
+    @Pattern(regexp = "[0-9]{3},[0-9]{6}", message = "Wrong card id")
     private String cardId;
 
     @Column(name = "phone_number", nullable = false)
@@ -140,6 +140,8 @@ public class User extends NamedEntity implements Serializable {
     @Size(max = 1024)
     private byte[] photo;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Events> visits;
 
     public void setEmail(String email) {
         this.email = StringUtils.hasText(email) ? email.toLowerCase() : null;
