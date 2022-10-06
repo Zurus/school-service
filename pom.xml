@@ -100,7 +100,11 @@
             <artifactId>jsoup</artifactId>
             <version>1.14.3</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-spring-boot-starter</artifactId>
+            <version>6.1.0</version>
+        </dependency>
         <!--cache-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
