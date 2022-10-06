@@ -61,9 +61,9 @@ spring:
 
 logging:
   config: classpath:logback.xml
-#  level:
-#    root: WARN
-#    ru.secure_environment.arm: INFO
+  #  level:
+  #    root: WARN
+  #    ru.secure_environment.arm: INFO
   #    org.springframework.security.web.FilterChainProxy: DEBUG
 
 #management:
@@ -73,3 +73,6 @@ logging:
 ##        include: "*"
 #          exclude: "env,beans"
 
+bot:
+  name: SecureEnvBot
+  token: 5596926556:AAFHZqdaMFrDZ1Dm7fxw404RodHM3p01dzc
