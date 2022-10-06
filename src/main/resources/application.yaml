@@ -74,5 +74,5 @@ logging:
 #          exclude: "env,beans"
 
 bot:
-  username: "bad-mafaka"
-  token: "nigga - bro"
+  name: SecureEnvBot
+  token: 5596926556:AAFHZqdaMFrDZ1Dm7fxw404RodHM3p01dzc
