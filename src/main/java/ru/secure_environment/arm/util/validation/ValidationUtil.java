@@ -12,7 +12,6 @@ import static ru.secure_environment.arm.util.ExceptionTextUtil.idWasNotFound;
 @UtilityClass
 public class ValidationUtil {
 
-
     public static void checkNew(BaseEntity entity) {
         if (!entity.isNew()) {
             throw new IllegalRequestDataException(entity + " must be new (id=null)");

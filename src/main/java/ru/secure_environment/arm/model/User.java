@@ -1,5 +1,7 @@
 package ru.secure_environment.arm.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.core.util.Json;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -41,88 +44,50 @@ import java.util.Set;
 public class User extends NamedEntity implements Serializable {
 
     public User(User u) {
-        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.getPhoneNumber(), u.getSchoolId(),
-                u.getCardId(), u.getTelegram(), u.getIsEmployee(), u.getClassNumber(), u.getJobTitle(), u.getClassRoomTeacher(), u.getRoles());
+        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.getPhoneNumber(), u.getCardId(), u.getTelegram(), u.getRoles());
     }
 
     public User(Integer id, String name, String email, String password, String phoneNumber,
-                String schoolId, String cardId, String telegram, Boolean isEmployee, String classNumber, String jobTitle, Boolean classRoomTeacher, Role role, Role... roles) {
-        this(id, name, email, password, phoneNumber, schoolId, cardId, telegram, isEmployee, classNumber, jobTitle, classRoomTeacher, EnumSet.of(role, roles));
+                String cardId, String telegram, Role role, Role... roles) {
+        this(id, name, email, password, phoneNumber, cardId, telegram, EnumSet.of(role, roles));
     }
 
     public User(Integer id, String name, String email, String password, String phoneNumber,
-                String schoolId, String cardId, String telegram, Boolean isEmployee, String classNumber, String jobTitle, Boolean classRoomTeacher, Collection<Role> roles) {
+                String cardId, String telegram, Collection<Role> roles) {
         super(id, name);
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.schoolId = schoolId;
         this.cardId = cardId;
         this.telegram = telegram;
-        this.isEmployee = isEmployee;
-        this.classNumber = classNumber;
-        this.jobTitle = jobTitle;
-        this.classRoomTeacher = classRoomTeacher;
         setRoles(roles);
     }
 
-    @Column(name = "school_id", nullable = false)
-    @NotBlank
-    @NotNull
-    @Pattern(regexp = "[0-9]{1,6}-[0-9]{1,4}", message = "Wrong school id")
-    private String schoolId;
 
     @Column(name = "card_id", nullable = false)
-    @NotNull
     @NotBlank
-    @Pattern(regexp = "[0-9]{3},[0-9]{5}", message = "Wrong card id")
+    //@Pattern(regexp = "[0-9]{3},[0-9]{5}", message = "Wrong card id")
     private String cardId;
 
     @Column(name = "phone_number", nullable = false)
-    @NotNull
-    @NotBlank
+    //@NotNull
+    //@NotBlank
     @Pattern(regexp = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$", message = "Wrong phone number")
     private String phoneNumber;
 
     @Column(name = "telegram")
     private String telegram;
 
-    /**
-     * Является ли пользователь сотрудником
-     * true - сотрудник
-     * false - ученик
-     */
-    @Column(name = "is_emloyee")
-    @NotNull
-    private Boolean isEmployee;
-
-    /**
-     * Класс
-     * актуально для ученика
-     */
-    @Column(name = "class_number")
-    private String classNumber;
-
-    /**
-     * Должность
-     * актуально для сотрудника
-     */
-    @Column(name = "job_title")
-    private String jobTitle;
-
-    @Column(name = "class_room_teacher")
-    private Boolean classRoomTeacher;
-
     @Column(name = "email", nullable = false, unique = true)
     @Email
-    @NotBlank
+    //@NotBlank
     @Size(max = 128)
     @NoHtml
     private String email;
 
-
     @Column(name = "password")
     @Size(max = 256)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -140,6 +105,10 @@ public class User extends NamedEntity implements Serializable {
     @Size(max = 1024)
     private byte[] photo;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "class_id", nullable = false)
+    private Classes schoolClass;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Events> visits;
 
@@ -156,13 +125,8 @@ public class User extends NamedEntity implements Serializable {
         setIfNotNull(this::setEmail, user.getEmail());
         setIfNotNull(this::setName, user.getName());
         setIfNotNull(this::setPhoneNumber, user.getPhoneNumber());
-        setIfNotNull(this::setSchoolId, user.getSchoolId());
         setIfNotNull(this::setCardId, user.getCardId());
         setIfNotNull(this::setTelegram, user.getTelegram());
-        setIfNotNull(this::setIsEmployee, user.getIsEmployee());
-        setIfNotNull(this::setClassNumber, user.getClassNumber());
-        setIfNotNull(this::setJobTitle, user.getJobTitle());
-        setIfNotNull(this::setClassRoomTeacher, user.getClassRoomTeacher());
         setIfNotNull(this::setRoles, user.getRoles());
         return this;
     }

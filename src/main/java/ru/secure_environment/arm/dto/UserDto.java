@@ -1,13 +1,20 @@
 package ru.secure_environment.arm.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import ru.secure_environment.arm.model.Role;
+import ru.secure_environment.arm.util.validation.HasSchool;
+import ru.secure_environment.arm.util.validation.NoHtml;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.util.Set;
 
 @Getter
@@ -15,8 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString
-public class UserDto {
+public class UserDto implements Serializable {
 
     public UserDto(Builder builder) {
         this.id = builder.getId();
@@ -26,36 +32,48 @@ public class UserDto {
         this.schoolId = builder.getSchoolId();
         this.cardId = builder.getCardId();
         this.telegram = builder.getTelegram();
-        this.isEmployee = builder.getIsEmployee();
         this.classNumber = builder.getClassNumber();
-        this.jobTitle = builder.getJobTitle();
-        this.classRoomTeacher = builder.getClassRoomTeacher();
         this.roles = builder.getRoles();
+        this.password = builder.getPassword();
     }
 
     private Integer id;
 
+    @NotNull
+    @NotBlank
     private String name;
 
+    @Email
+    @NoHtml
     private String email;
 
+    @Pattern(regexp = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$", message = "Wrong phone number")
     private String phoneNumber;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
+
+    @NotNull
+    @NotBlank
+    @HasSchool
     private String schoolId;
 
+    @NotNull
+    @NotBlank
     private String cardId;
 
     private String telegram;
 
-    private Boolean isEmployee;
-
+    @NotNull
+    @NotNull
     private String classNumber;
 
-    private String jobTitle;
-
-    private Boolean classRoomTeacher;
-
     private Set<Role> roles;
+
+    @Override
+    public String toString() {
+        return "UserDto:" + id + "[" + email + "]";
+    }
 
     @Getter
     public static class Builder {
@@ -74,13 +92,9 @@ public class UserDto {
 
         private String telegram;
 
-        private Boolean isEmployee;
-
         private String classNumber;
 
-        private String jobTitle;
-
-        private Boolean classRoomTeacher;
+        private String password;
 
         private Set<Role> roles;
 
@@ -114,28 +128,19 @@ public class UserDto {
             return this;
         }
 
-        public Builder isEmployee(Boolean isEmployee) {
-            this.isEmployee = isEmployee;
-            return this;
-        }
 
         public Builder classNumber(String classNumber) {
             this.classNumber = classNumber;
             return this;
         }
 
-        public Builder jobTitle(String jobTitle) {
-            this.jobTitle = jobTitle;
-            return this;
-        }
-
-        public Builder classRoomTeacher(Boolean classRoomTeacher) {
-            this.classRoomTeacher = classRoomTeacher;
-            return this;
-        }
-
         public Builder roles(Set<Role> roles) {
             this.roles = roles;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
             return this;
         }
 

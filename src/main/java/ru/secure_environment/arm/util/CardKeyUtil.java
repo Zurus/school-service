@@ -1,6 +1,7 @@
 package ru.secure_environment.arm.util;
 
 import lombok.experimental.UtilityClass;
+import org.mapstruct.Named;
 
 @UtilityClass
 public class CardKeyUtil {
@@ -13,11 +14,19 @@ public class CardKeyUtil {
     //todo: Добавить новое число!
     private static final int W58_MANTISSA_SIZE = 2;
 
-
     public static String toDecString(String hex) {
         int splitter = hex.length() == W26_SIZE ? W26_MANTISSA_SIZE : W58_MANTISSA_SIZE;
         String mantissa = String.format("%03d", Integer.valueOf(hex.substring(0, splitter), 16));
         String exponent = Integer.valueOf(hex.substring(splitter), 16).toString();
         return mantissa + "," + exponent;
+    }
+
+    public static String toHexString(String dec) {
+        String[] splitString = dec.split("[.,]");
+        String mantissa = splitString[0];
+        String exponent = splitString[1];
+
+        return Integer.toHexString(Integer.valueOf(mantissa)).toUpperCase()
+                + Integer.toHexString(Integer.valueOf(exponent)).toUpperCase();
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,13 +21,11 @@ import ru.secure_environment.arm.dto.UserDto;
 import ru.secure_environment.arm.mapping.UserListMapper;
 import ru.secure_environment.arm.mapping.UserMapper;
 import ru.secure_environment.arm.model.User;
+import ru.secure_environment.arm.services.AccountService;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-
-import static ru.secure_environment.arm.util.validation.ValidationUtil.assureIdConsistent;
-import static ru.secure_environment.arm.util.validation.ValidationUtil.checkNew;
 
 
 @RestController
@@ -36,46 +33,47 @@ import static ru.secure_environment.arm.util.validation.ValidationUtil.checkNew;
 @AllArgsConstructor
 @Slf4j
 @Tag(name = "Account Controller")
-public class AccountController extends AbstractUserController {
+public class AccountController {
     public static final String URL = "/api/account";
 
     private final UserMapper userMapper;
     private final UserListMapper userListMapper;
+    private final AccountService accountService;
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> get(@PathVariable int id) {
-        User user = getUser(id);
+        log.info("get {}", id);
+        User user = accountService.getUser(id);
         return ResponseEntity.ok(userMapper.toDTO(user));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
-        super.delete(id);
+        log.info("delete {}", id);
+        accountService.delete(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
-    public void update(@Valid @RequestBody User user, @PathVariable int id) {
+    public void update(@Valid @RequestBody UserDto user, @PathVariable int id) {
         log.info("update {} with id={}", user, id);
-        assureIdConsistent(user, id);
-        prepareAndSave(user);
+        accountService.updateUser(user, id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> create(@Valid @RequestBody User user) {
-        log.info("create {}", user);
-        checkNew(user);
-        User created = prepareAndSave(user);
+    public ResponseEntity<UserDto> create(@Valid @RequestBody UserDto userDto) {
+        log.info("create new user {}", userDto);
+        User created = accountService.createNewUser(userDto);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
-        return ResponseEntity.created(uriOfNewResource).body(created);
+        return ResponseEntity.created(uriOfNewResource).body(userMapper.toDTO(created));
     }
 
-    @GetMapping(value = "/users")
-    public ResponseEntity<List<UserDto>> getUsers() {
-        return ResponseEntity.ok(userListMapper.toUserListDto(repository.findAll(Sort.by(Sort.Direction.ASC, "id"))));
+    @GetMapping(value = "/school/{id}")
+    public ResponseEntity<List<UserDto>> getUsers(@PathVariable String id) {
+        log.info("find all by school {}", id);
+        return ResponseEntity.ok(userListMapper.toUserListDto(accountService.getUsersFromSchool(id)));
     }
 }

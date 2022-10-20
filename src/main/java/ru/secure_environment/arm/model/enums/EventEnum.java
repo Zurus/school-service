@@ -1,9 +1,9 @@
 package ru.secure_environment.arm.model.enums;
 
 public enum EventEnum {
-    EMPTY(-1),
-    ENTER(0),
-    EXIT(1);
+    EXIT(1),
+    ENTER(2),
+    EMPTY(3);
 
     private int status;
 

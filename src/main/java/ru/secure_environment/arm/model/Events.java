@@ -3,6 +3,7 @@ package ru.secure_environment.arm.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import ru.secure_environment.arm.model.enums.EventEnum;
 
 import javax.persistence.Column;
@@ -11,14 +12,14 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @NoArgsConstructor
 @Table(name = "events")
 @Data
 @Entity
+@ToString
 public class Events extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -26,16 +27,18 @@ public class Events extends BaseEntity implements Serializable {
     private User user;
 
     @Column(name = "event_time")
-    private LocalDateTime eventTime;
+    private Date eventTime;
+
+    @Column(name = "log_id")
+    private int logId;
 
     @Column(name = "event_type")
-    @Pattern(regexp = "[-]{0,1}[0-1]{1}", message = "Wrong event")
-    private int eventType;
+    private int direction;
 
     private String userKeyCard;
 
     public EventEnum getEvent() {
-        return EventEnum.parse(eventType);
+        return EventEnum.parse(direction);
     }
 
     public void setUser(User user) {

@@ -9,6 +9,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
+import ru.secure_environment.arm.error.IllegalRequestDataException;
+import ru.secure_environment.arm.mapping.UserMapper;
+import ru.secure_environment.arm.model.User;
+import ru.secure_environment.arm.repository.UserRepository;
 
 //https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing-spring-boot-applications
 @SpringBootTest
@@ -22,7 +26,20 @@ public class AbstractControllerTest {
     //https://sysout.ru/testirovanie-kontrollerov-s-pomoshhyu-mockmvc/
     private MockMvc mockMvc;
 
+    @Autowired
+    private UserRepository userRepo;
+
+    @Autowired
+    protected UserMapper userMapper;
+
     protected ResultActions perform(MockHttpServletRequestBuilder builder) throws Exception {
         return mockMvc.perform(builder);
+    }
+
+    //@Transactional
+    public User getUserById(int id) {
+        return userRepo.findById(id).orElseThrow(
+                () -> new IllegalRequestDataException("user with id=" + id + " not found!")
+        );
     }
 }
