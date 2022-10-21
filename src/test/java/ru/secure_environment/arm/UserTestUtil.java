@@ -3,9 +3,9 @@ package ru.secure_environment.arm;
 import lombok.experimental.UtilityClass;
 import ru.secure_environment.arm.dto.SchoolDto;
 import ru.secure_environment.arm.dto.UserDto;
-import ru.secure_environment.arm.model.Role;
 import ru.secure_environment.arm.model.School;
 import ru.secure_environment.arm.model.User;
+import ru.secure_environment.arm.model.enums.Role;
 import ru.secure_environment.arm.util.CardKeyUtil;
 import ru.secure_environment.arm.util.JsonUtil;
 

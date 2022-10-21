@@ -1,4 +1,4 @@
-package ru.secure_environment.arm.model;
+package ru.secure_environment.arm.model.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 

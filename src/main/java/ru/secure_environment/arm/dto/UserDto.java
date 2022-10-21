@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.secure_environment.arm.model.Role;
+import ru.secure_environment.arm.model.enums.Role;
 import ru.secure_environment.arm.util.validation.HasSchool;
 import ru.secure_environment.arm.util.validation.NoHtml;
 
