@@ -10,7 +10,7 @@ import ru.secure_environment.arm.util.JsonUtil;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.secure_environment.arm.UserTestUtil.ADMIN_MAIL;
+import static ru.secure_environment.arm.MockData.ADMIN_MAIL;
 import static ru.secure_environment.arm.UserTestUtil.SCHOOL_MATCHER;
 import static ru.secure_environment.arm.UserTestUtil.getNewSchool;
 import static ru.secure_environment.arm.web.SchoolController.URL;

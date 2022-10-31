@@ -97,7 +97,7 @@ public class User extends NamedEntity implements Serializable {
     private Classes schoolClass;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Events> visits;
+    private Set<Event> visits;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_messages",

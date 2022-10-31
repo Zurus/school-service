@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.secure_environment.arm.MockData.*;
 import static ru.secure_environment.arm.UserTestUtil.*;
 
 public class AccountControllerTest extends AbstractControllerTest {

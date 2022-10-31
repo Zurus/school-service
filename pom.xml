@@ -10,7 +10,7 @@
     </parent>
     <groupId>ru.secure-environment</groupId>
     <artifactId>arm</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     <!--	<packaging>war</packaging>-->
     <name>arm</name>
     <description>Spring Boot project for school visitors control</description>
@@ -60,17 +60,23 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
-                        <exclusions>
-                            <!-- exclude deprecated module in favor of spring-data-rest-hal-explorer -->
-                            <exclusion>
-                                <groupId>org.springframework.data</groupId>
-                                <artifactId>spring-data-rest-hal-browser</artifactId>
-                            </exclusion>
-                        </exclusions>
+            <exclusions>
+                <!-- exclude deprecated module in favor of spring-data-rest-hal-explorer -->
+                <exclusion>
+                    <groupId>org.springframework.data</groupId>
+                    <artifactId>spring-data-rest-hal-browser</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -133,10 +139,6 @@
             <version>${lombok-mapstruct-binding.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
     </dependencies>
 
     <build>

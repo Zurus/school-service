@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import ru.secure_environment.arm.dto.EventDto;
-import ru.secure_environment.arm.model.Events;
+import ru.secure_environment.arm.model.Event;
 
 import java.util.Date;
 
@@ -13,7 +13,7 @@ public interface EventMapper {
 
     @Mapping(target = "userKeyCard", source = "keyHex")
     @Mapping(target = "eventTime", source = "time", qualifiedByName = "unixTimeToDate")
-    Events toModel(EventDto userDto);
+    Event toModel(EventDto userDto);
 
     @Named("unixTimeToDate")
     //https://translated.turbopages.org/proxy_u/en-ru.ru.e90c652f-6348f669-1c2bafe8-74722d776562/https/stackoverflow.com/questions/732034/getting-unixtime-in-java)

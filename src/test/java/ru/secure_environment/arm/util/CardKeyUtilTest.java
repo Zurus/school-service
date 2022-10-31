@@ -1,10 +1,12 @@
 package ru.secure_environment.arm.util;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 import ru.secure_environment.arm.MatcherFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("test")
 class CardKeyUtilTest {
 
     public static final MatcherFactory.Matcher<String> USER_MATCHER = MatcherFactory.usingEqualsComparator(String.class);

@@ -2,6 +2,7 @@ package ru.secure_environment.arm.web;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -18,6 +19,7 @@ import ru.secure_environment.arm.repository.UserRepository;
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
+@AutoConfigureTestDatabase
 @ActiveProfiles("test")
 //https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing-spring-boot-applications-testing-with-mock-environment
 public class AbstractControllerTest {

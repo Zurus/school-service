@@ -10,4 +10,10 @@ import lombok.NoArgsConstructor;
 public class EventResultDto {
 
     private int confirmedLogId;
+
+    public void confirmIfBigger(int logId) {
+        if (logId > confirmedLogId) {
+            confirmedLogId = logId;
+        }
+    }
 }

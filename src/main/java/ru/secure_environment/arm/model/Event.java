@@ -20,7 +20,8 @@ import java.util.Date;
 @Data
 @Entity
 @ToString
-public class Events extends BaseEntity implements Serializable {
+//todo: Добавить ограничение на уникальность по полям logId и userId
+public class Event extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)

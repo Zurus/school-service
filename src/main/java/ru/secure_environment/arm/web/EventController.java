@@ -26,9 +26,9 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<EventResultDto>> create(@RequestBody EventLogsDto events) {
+    public ResponseEntity<EventResultDto> create(@RequestBody EventLogsDto events) {
         log.info("event {}", events);
-        List<EventResultDto> list = eventService.saveEvent(events.getLogs());
-        return ResponseEntity.ok(list);
+        EventResultDto resultDto = eventService.saveEvent(events.getLogs());
+        return ResponseEntity.ok(resultDto);
     }
 }
