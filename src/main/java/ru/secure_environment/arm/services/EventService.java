@@ -7,12 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.secure_environment.arm.dto.EventDto;
 import ru.secure_environment.arm.dto.EventResultDto;
 import ru.secure_environment.arm.mapping.EventMapper;
+import ru.secure_environment.arm.model.Card;
 import ru.secure_environment.arm.model.Event;
-import ru.secure_environment.arm.model.User;
+import ru.secure_environment.arm.repository.CardRepository;
 import ru.secure_environment.arm.repository.EventRepository;
-import ru.secure_environment.arm.repository.UserRepository;
 import ru.secure_environment.arm.util.DtoUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,31 +22,38 @@ import java.util.Objects;
 @AllArgsConstructor
 public class EventService {
 
-    private final UserRepository userRepository;
     private final EventRepository eventRepository;
+    private final CardRepository cardRepository;
     private final EventMapper eventMapper;
 
     @Transactional
-    public EventResultDto saveEvent(List<EventDto> list) {
+    public List<EventResultDto> saveEvent(List<EventDto> list) {
         log.info("save events {}", list);
 
-        EventResultDto eventResultDto = new EventResultDto(Integer.MIN_VALUE);
+        List<EventResultDto> resultList = new ArrayList<>();
         for (EventDto eventDto : list) {
             if (!DtoUtil.hasEmptyFields(eventDto)) {
                 log.warn("empty fields {}", eventDto);
                 continue;
             }
             Event event = eventMapper.toModel(eventDto);
-            User user = userRepository.findByCardId(event.getUserKeyCard()).orElse(null);
-            if (Objects.isNull(user)) {
-                log.warn("User with keyCard={} not found!", event.getUserKeyCard());
+            Card card = cardRepository
+                    .findCardByCardId(eventDto.getKeyHex())
+                    .orElse(null);
+
+            if (Objects.isNull(card)) {
+                log.warn("Card = {} not found!", eventDto.getKeyHex());
                 continue;
             }
-            event.setUser(user);
-            //event.setId(1);
+
+            if (eventRepository.existsEventByCardIdAndLogId(eventDto.getKeyHex(), eventDto.getLogId())) {
+                log.warn("Event = {} already saved!", eventDto.getKeyHex());
+                continue;
+            }
+            event.setCard(card);
             event = eventRepository.save(event);
-            eventResultDto.confirmIfBigger(event.getLogId());
+            resultList.add(new EventResultDto(event.getLogId()));
         }
-        return eventResultDto;
+        return resultList;
     }
 }

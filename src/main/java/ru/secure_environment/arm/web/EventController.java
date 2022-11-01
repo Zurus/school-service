@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.secure_environment.arm.dto.EventLogsDto;
 import ru.secure_environment.arm.dto.EventResultDto;
+import ru.secure_environment.arm.error.ServerWorkException;
 import ru.secure_environment.arm.services.EventService;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -28,7 +30,10 @@ public class EventController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EventResultDto> create(@RequestBody EventLogsDto events) {
         log.info("event {}", events);
-        EventResultDto resultDto = eventService.saveEvent(events.getLogs());
+        List<EventResultDto> resultDtoList = eventService.saveEvent(events.getLogs());
+        EventResultDto resultDto = resultDtoList.stream().max(Comparator.comparingInt(EventResultDto::getConfirmedLogId)).orElseThrow(
+                () -> new ServerWorkException("cannot save event list = " + events)
+        );
         return ResponseEntity.ok(resultDto);
     }
 }

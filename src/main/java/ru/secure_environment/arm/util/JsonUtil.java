@@ -61,5 +61,4 @@ public class JsonUtil {
         map.putAll(addProps);
         return writeValue(map);
     }
-
 }

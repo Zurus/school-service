@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.lang.NonNull;
 import ru.secure_environment.arm.error.IllegalRequestDataException;
-import ru.secure_environment.arm.model.BaseEntity;
+import ru.secure_environment.arm.model.common.BaseEntity;
 import ru.secure_environment.arm.model.common.HasId;
 
 import static ru.secure_environment.arm.util.ExceptionTextUtil.idWasNotFound;

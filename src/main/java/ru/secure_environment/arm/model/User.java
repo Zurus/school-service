@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import ru.secure_environment.arm.model.common.NamedEntity;
 import ru.secure_environment.arm.model.enums.Role;
 import ru.secure_environment.arm.util.validation.NoHtml;
 
@@ -18,6 +19,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Set;
@@ -31,30 +33,24 @@ import java.util.Set;
 public class User extends NamedEntity implements Serializable {
 
     public User(User u) {
-        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.getPhoneNumber(), u.getCardId(), u.getTelegram(), u.getRoles());
+        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.getPhoneNumber(), u.getCard(), u.getTelegram(), u.getRoles());
     }
 
     public User(Integer id, String name, String email, String password, String phoneNumber,
-                String cardId, String telegram, Role role, Role... roles) {
-        this(id, name, email, password, phoneNumber, cardId, telegram, EnumSet.of(role, roles));
+                Card card, String telegram, Role role, Role... roles) {
+        this(id, name, email, password, phoneNumber, card, telegram, EnumSet.of(role, roles));
     }
 
     public User(Integer id, String name, String email, String password, String phoneNumber,
-                String cardId, String telegram, Collection<Role> roles) {
+                Card card, String telegram, Collection<Role> roles) {
         super(id, name);
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.cardId = cardId;
+        this.card = card;
         this.telegram = telegram;
         setRoles(roles);
     }
-
-
-    @Column(name = "card_id", nullable = false)
-    @NotBlank
-    //@Pattern(regexp = "[0-9]{3},[0-9]{5}", message = "Wrong card id")
-    private String cardId;
 
     @Column(name = "phone_number", nullable = false)
     //@NotNull
@@ -96,8 +92,9 @@ public class User extends NamedEntity implements Serializable {
     @JoinColumn(name = "class_id", nullable = false)
     private Classes schoolClass;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Event> visits;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "card_id", nullable = false)
+    private Card card;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_messages",
@@ -122,7 +119,6 @@ public class User extends NamedEntity implements Serializable {
         setIfNotNull(this::setEmail, user.getEmail());
         setIfNotNull(this::setName, user.getName());
         setIfNotNull(this::setPhoneNumber, user.getPhoneNumber());
-        setIfNotNull(this::setCardId, user.getCardId());
         setIfNotNull(this::setTelegram, user.getTelegram());
         setIfNotNull(this::setRoles, user.getRoles());
         return this;

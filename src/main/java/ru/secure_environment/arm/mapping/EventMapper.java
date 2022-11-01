@@ -2,6 +2,7 @@ package ru.secure_environment.arm.mapping;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.mapstruct.Named;
 import ru.secure_environment.arm.dto.EventDto;
 import ru.secure_environment.arm.model.Event;
@@ -11,8 +12,10 @@ import java.util.Date;
 @Mapper(componentModel = "spring")
 public interface EventMapper {
 
-    @Mapping(target = "userKeyCard", source = "keyHex")
-    @Mapping(target = "eventTime", source = "time", qualifiedByName = "unixTimeToDate")
+    @Mappings({
+            @Mapping(target = "eventTime", source = "time", qualifiedByName = "unixTimeToDate"),
+            @Mapping(target = "card", ignore = true)
+    })
     Event toModel(EventDto userDto);
 
     @Named("unixTimeToDate")

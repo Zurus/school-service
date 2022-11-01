@@ -1,24 +1,18 @@
-package ru.secure_environment.arm.model;
+package ru.secure_environment.arm.model.common;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.domain.Persistable;
 import org.springframework.data.util.ProxyUtils;
 import org.springframework.util.Assert;
-import ru.secure_environment.arm.model.common.HasId;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import java.util.function.Consumer;
+import javax.validation.constraints.Size;
 
 @MappedSuperclass
 //  https://stackoverflow.com/a/6084701/548473
@@ -27,21 +21,15 @@ import java.util.function.Consumer;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class BaseEntity implements Persistable<Integer>, HasId {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY) // https://stackoverflow.com/a/28025008/548473
-    protected Integer id;
+public abstract class BaseSerialEntity {
 
-    public int id() {
+    @Id
+    @Size(min = 32, max = 32)
+    protected String id;
+
+    public String id() {
         Assert.notNull(id, "Entity must have id");
         return id;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isNew() {
-        return id == null;
     }
 
     @Override
@@ -52,23 +40,17 @@ public abstract class BaseEntity implements Persistable<Integer>, HasId {
         if (o == null || !getClass().equals(ProxyUtils.getUserClass(o))) {
             return false;
         }
-        BaseEntity that = (BaseEntity) o;
+        BaseSerialEntity that = (BaseSerialEntity) o;
         return id != null && id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return id == null ? 0 : id;
+        return id == null ? 0 : id.hashCode();
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + ":" + id;
-    }
-
-    protected <T> void setIfNotNull(final Consumer<T> setter, final T value) {
-        if (value != null) {
-            setter.accept(value);
-        }
     }
 }

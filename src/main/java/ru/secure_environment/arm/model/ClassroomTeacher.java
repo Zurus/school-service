@@ -3,6 +3,7 @@ package ru.secure_environment.arm.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.secure_environment.arm.model.common.BaseEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

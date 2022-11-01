@@ -15,12 +15,10 @@ public interface UserMapper {
             @Mapping(source = "schoolClass.name", target = "classNumber"),
             @Mapping(source = "schoolClass.school.id", target = "schoolId"),
             @Mapping(source = "password", target = "password", ignore = true),
-            @Mapping(source = "cardId", target = "cardId", qualifiedByName = "cardKeyToDec")
-
+            @Mapping(source = "card.cardId", target = "cardId", qualifiedByName = "cardKeyToDec")
     })
     UserDto toDTO(User user);
 
-    @Mapping(source = "cardId", target = "cardId", qualifiedByName = "cardKeyToHex")
     User toModel(UserDto userDto);
 
     @Named("cardKeyToDec")

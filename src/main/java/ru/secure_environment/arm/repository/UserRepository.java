@@ -27,7 +27,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmailIgnoreCase(String email);
 
 
-    @Query("SELECT u FROM User u WHERE u.cardId = :cardId")
+    @Query("SELECT u FROM User u WHERE u.card.cardId = :cardId")
     Optional<User> findByCardId(String cardId);
 
 //    @EntityGraph(attributePaths = {"roles"})

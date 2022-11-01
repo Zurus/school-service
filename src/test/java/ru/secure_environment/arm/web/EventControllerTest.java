@@ -12,11 +12,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.secure_environment.arm.MockData.ADMIN_MAIL;
 import static ru.secure_environment.arm.MockData.RESULT_DTO;
 import static ru.secure_environment.arm.MockData.eventString;
+import static ru.secure_environment.arm.MockData.eventStringAlreadyExisted;
 import static ru.secure_environment.arm.UserTestUtil.EVENT_RESULT_DTO_MATCHER;
 import static ru.secure_environment.arm.web.EventController.URL;
 
 class EventControllerTest extends AbstractControllerTest {
-
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
@@ -29,5 +29,15 @@ class EventControllerTest extends AbstractControllerTest {
 
         EventResultDto created = EVENT_RESULT_DTO_MATCHER.readFromJson(action);
         EVENT_RESULT_DTO_MATCHER.assertMatch(RESULT_DTO, created);
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void create_alreadyExistedEvent() throws Exception {
+        perform(MockMvcRequestBuilders.post(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(eventStringAlreadyExisted))
+                .andDo(print())
+                .andExpect(status().is5xxServerError());
     }
 }

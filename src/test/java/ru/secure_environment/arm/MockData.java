@@ -4,6 +4,8 @@ import lombok.experimental.UtilityClass;
 import ru.secure_environment.arm.dto.EventResultDto;
 import ru.secure_environment.arm.dto.SchoolDto;
 import ru.secure_environment.arm.dto.UserDto;
+import ru.secure_environment.arm.model.Card;
+import ru.secure_environment.arm.model.Event;
 import ru.secure_environment.arm.model.User;
 import ru.secure_environment.arm.model.enums.Role;
 import ru.secure_environment.arm.util.CardKeyUtil;
@@ -24,7 +26,8 @@ public class MockData {
     public static final String SCHOOL_ID = "A1B2C3D4E5F6A7B8C9D0E1F2A3B4C5D6";
     public static final String USER_CARD_ID_DEC = "056,35766";
     public static final String USER_CARD_ID_HEX = "388BB6";
-    public static final String ADMIN_CARD_ID = "251,35066";
+    public static final String ADMIN_CARD_ID_DEC = "251,35066";
+    public static final String ADMIN_CARD_ID_HEX = "FB88FA";
     public static final String USER_TELEGRAM = "asdf";
     public static final Boolean USER_IS_EMPLOYEE = false;
     public static final String CLASS_NUMBER = "1A";
@@ -37,10 +40,13 @@ public class MockData {
     public static final String NEW_USER_CARD_ID = "156,35761";
     public static final String NEW_TELEGRAM = "telega";
 
+    public static final Card cardUser = new Card(1, USER_CARD_ID_HEX);
+    public static final Card cardAdmin = new Card(2, ADMIN_CARD_ID_HEX);
+    public static final Card newUserCard = new Card(5, CardKeyUtil.toHexString(NEW_USER_CARD_ID));
 
-    public static final User user = new User(USER_ID, "User", USER_MAIL, "password", USER_PHONE, USER_CARD_ID_HEX, USER_TELEGRAM, Role.USER);
-    public static final User admin = new User(ADMIN_ID, "Admin", ADMIN_MAIL, "admin", ADMIN_PHONE, ADMIN_CARD_ID, null, Role.USER, Role.ADMIN);
-    public static final User newUser = new User(NEW_ID, NEW_NAME, NEW_MAIL, NEW_PASS, NEW_PHONE, CardKeyUtil.toHexString(NEW_USER_CARD_ID), NEW_TELEGRAM, Role.USER);
+    public static final User user = new User(USER_ID, "User", USER_MAIL, "password", USER_PHONE, cardUser, USER_TELEGRAM, Role.USER);
+    public static final User admin = new User(ADMIN_ID, "Admin", ADMIN_MAIL, "admin", ADMIN_PHONE, cardAdmin, null, Role.USER, Role.ADMIN);
+    public static final User newUser = new User(NEW_ID, NEW_NAME, NEW_MAIL, NEW_PASS, NEW_PHONE, newUserCard, NEW_TELEGRAM, Role.USER);
 
     public static final UserDto userDto =
             new UserDto.Builder(USER_ID, "User")
@@ -59,7 +65,7 @@ public class MockData {
                     .email(ADMIN_MAIL)
                     .phoneNumber(ADMIN_PHONE)
                     .schoolId(SCHOOL_ID)
-                    .cardId(ADMIN_CARD_ID)
+                    .cardId(ADMIN_CARD_ID_DEC)
                     .classNumber(CLASS_NUMBER)
                     .roles(EnumSet.of(Role.USER, Role.ADMIN))
                     .build();
@@ -139,6 +145,21 @@ public class MockData {
             "    }\n" +
             "  ]\n" +
             "}";
+
+    public static String eventStringAlreadyExisted = "{\n" +
+            "  \"logs\": [\n" +
+            "    {\n" +
+            "      \"logId\": \"100170\",\n" +
+            "      \"time\": \"1665603127\",\n" +
+            "      \"empId\": \"\",\n" +
+            "      \"internalEmpId\": \"0\",\n" +
+            "      \"accessPoint\": \"1\",\n" +
+            "      \"direction\": \"2\",\n" +
+            "      \"keyHex\": \"388BB6\"\n" +
+            "    }] }";
+
+
+    //public static Event event = new Event(cardUser, );
 
     public static final EventResultDto RESULT_DTO = new EventResultDto(100176);
 }
