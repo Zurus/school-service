@@ -31,7 +31,7 @@ public class RestApiController {
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public List<User> getUsers() {
         log.info("Get All users");
-        return repository.getAllBy();
+        return repository.findAll();
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)

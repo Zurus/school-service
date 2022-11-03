@@ -2,30 +2,21 @@ package ru.schoolservice.arm.model;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.BatchSize;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Email;
-
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -33,30 +24,29 @@ import java.util.Set;
 @Table(name = "users")
 @Getter
 @Setter
-@ToString(callSuper = true, exclude = {"password"})
+//@ToString(exclude = {"list"})
+@ToString
 public class User extends BaseEntity {
 
-    @Column(name = "email", nullable = false, unique = true)
-    @Email
+    public User(String name) {
+        this.name = name;
+    }
+
+    @Column(name = "name", nullable = false, unique = true)
     @NotEmpty
     @Size(max = 128)
-    private String email;
+    private String name;
 
-    @Column(name = "first_name")
-    @Size(max = 128)
-    private String firstName;
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH}, fetch = FetchType.EAGER)
+    private List<Vehicle> list = new ArrayList<>();
 
-    @Column(name = "last_name")
-    @Size(max = 128)
-    private String lastName;
+    public boolean addVehicle(Vehicle vehicle) {
+        vehicle.setUser(this);
+        return list.add(vehicle);
+    }
 
-    @Column(name = "password")
-    @Size(max = 256)
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
-    @Column(name = "role")
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Role> roles;
+    public void removeVehicle(Vehicle vehicle) {
+        list.remove(vehicle);
+        vehicle.setUser(null);
+    }
 }

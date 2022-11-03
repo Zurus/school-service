@@ -11,14 +11,12 @@ spring:
       #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
       hibernate:
         format_sql: true
-        default_batch_fetch_size: 20
         # https://stackoverflow.com/questions/21257819/what-is-the-difference-between-hibernate-jdbc-fetch-size-and-hibernate-jdbc-batc
-        jdbc.batch_size: 20
     defer-datasource-initialization: true
   datasource:
     # ImMemory
     #    https://chowdera.com/2022/04/202204020358075199.html
-    url: jdbc:h2:mem:voting;OLD_INFORMATION_SCHEMA=TRUE
+    url: jdbc:h2:mem:voting
     #    tcp: jdbc:h2:tcp://localhost:9092/mem:voting
     # Absolute path
     #    url: jdbc:h2:C:/projects/bootjava/restorant-voting/db/voting
