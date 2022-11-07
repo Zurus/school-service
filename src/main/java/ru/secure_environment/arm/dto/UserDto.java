@@ -35,6 +35,7 @@ public class UserDto implements Serializable {
         this.classNumber = builder.getClassNumber();
         this.roles = builder.getRoles();
         this.password = builder.getPassword();
+        this.position = builder.getPosition();
     }
 
     private Integer id;
@@ -64,9 +65,9 @@ public class UserDto implements Serializable {
 
     private String telegram;
 
-    @NotNull
-    @NotNull
     private String classNumber;
+
+    private String position;
 
     private Set<Role> roles;
 
@@ -93,6 +94,8 @@ public class UserDto implements Serializable {
         private String telegram;
 
         private String classNumber;
+
+        private String position;
 
         private String password;
 
@@ -141,6 +144,11 @@ public class UserDto implements Serializable {
 
         public Builder password(String password) {
             this.password = password;
+            return this;
+        }
+
+        public Builder position(String position) {
+            this.position = position;
             return this;
         }
 

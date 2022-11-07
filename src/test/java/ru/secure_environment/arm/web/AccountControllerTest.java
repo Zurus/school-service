@@ -126,4 +126,15 @@ public class AccountControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
+
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void get_employer() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + EMPLOYEE_ID))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(USER_MATCHER_DTO.contentJson(employeeDto));
+    }
 }

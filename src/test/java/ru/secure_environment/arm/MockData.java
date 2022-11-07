@@ -18,6 +18,7 @@ public class MockData {
     public static final int USER_ID = 1;
     public static final int ADMIN_ID = 2;
     public static final int NEW_ID = 5;
+    public static final int EMPLOYEE_ID = 5;
     public static final int NOT_FOUND = 100;
     public static final String USER_MAIL = "user@gmail.com";
     public static final String ADMIN_MAIL = "admin@javaops.ru";
@@ -101,6 +102,16 @@ public class MockData {
                     .classNumber(CLASS_NUMBER)
                     .roles(Collections.singleton(Role.USER))
                     .password(NEW_PASS)
+                    .build();
+
+    public static final UserDto employeeDto =
+            new UserDto.Builder(5, "math_teacher")
+                    .email("super_teacher@mail.ru")
+                    .phoneNumber("+79174816110")
+                    .schoolId("A1B2C3D4E5F6A7B8C9D0E1F2A3B41234")
+                    .cardId("156,58651")
+                    .position("Педработники")
+                    .roles(Collections.singleton(Role.USER))
                     .build();
 
     public static final SchoolDto schoolDto = new SchoolDto(SCHOOL_ID, "Аксаковская гимназия №11");

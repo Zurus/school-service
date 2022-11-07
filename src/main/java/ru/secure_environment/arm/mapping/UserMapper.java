@@ -7,12 +7,14 @@ import org.mapstruct.Named;
 import ru.secure_environment.arm.dto.UserDto;
 import ru.secure_environment.arm.model.User;
 import ru.secure_environment.arm.util.CardKeyUtil;
+import ru.secure_environment.arm.util.UserUtil;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
     @Mappings({
-            @Mapping(source = "schoolClass.name", target = "classNumber"),
+            @Mapping(source = "schoolClass.name", target = "classNumber", qualifiedByName = "classNumberMapper"),
+            @Mapping(source = "schoolClass.name", target = "position", qualifiedByName = "positionMapper"),
             @Mapping(source = "schoolClass.school.id", target = "schoolId"),
             @Mapping(source = "password", target = "password", ignore = true),
             @Mapping(source = "card.cardId", target = "cardId", qualifiedByName = "cardKeyToDec")
@@ -20,6 +22,23 @@ public interface UserMapper {
     UserDto toDTO(User user);
 
     User toModel(UserDto userDto);
+
+    @Named("positionMapper")
+    default String positionMapper(String classNumber) {
+        if (UserUtil.isEmployee(classNumber)) {
+            return classNumber;
+        }
+        return null;
+    }
+
+    @Named("classNumberMapper")
+    default String classNumberMapper(String classNumber) {
+        if (!UserUtil.isEmployee(classNumber)) {
+            return classNumber;
+        }
+
+        return null;
+    }
 
     @Named("cardKeyToDec")
     default String defaultCardKeyToDec(String cardId) {

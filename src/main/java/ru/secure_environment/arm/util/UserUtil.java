@@ -10,15 +10,16 @@ import static ru.secure_environment.arm.config.WebSecurityConfig.PASSWORD_ENCODE
 @UtilityClass
 public class UserUtil {
 
-    public static final String EMPLOYEE = "employee";
+    public static final String EMPL_TECHNICAL = "Техперсонал";
+    public static final String EMPL_TEACH = "Педработники";
 
     /**
      * Является ли пользователь сотрудником
      * true - сотрудник
      * false - ученик
      */
-    public static Boolean isEmployee(User user) {
-        return user.getSchoolClass().getName().equalsIgnoreCase(EMPLOYEE);
+    public static Boolean isEmployee(String schoolClass) {
+        return schoolClass.equalsIgnoreCase(EMPL_TECHNICAL) || schoolClass.equalsIgnoreCase(EMPL_TEACH);
     }
 
     public static User prepareToSave(User user) {
