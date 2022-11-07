@@ -37,8 +37,11 @@ public class User extends BaseEntity {
     @Size(max = 128)
     private String name;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Vehicle> list = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH}, fetch = FetchType.EAGER)
+//    private List<Vehicle> list = new ArrayList<>();
 
     public boolean addVehicle(Vehicle vehicle) {
         vehicle.setUser(this);

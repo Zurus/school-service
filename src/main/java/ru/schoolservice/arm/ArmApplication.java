@@ -29,8 +29,13 @@ public class ArmApplication implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        dbService.persistTester();
-        //dbService.mergeTester2();
+//        dbService.persistTester();
+//        dbService.mergeTester1();
+//        dbService.mergeTester2();
+//        dbService.orphanTester();
+//        dbService.removeTester1();
+        //dbService.removeTester2();
+        dbService.removeTester3();
         userRepository.findAll().forEach(System.out::println);
 
 //        System.out.println("**************************************newUser******************************************");

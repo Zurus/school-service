@@ -21,14 +21,21 @@ public class DbService {
     private VehicleRepository vehicleRepository;
 
 
-
-
     @Transactional
     public void orphanTester() {
         System.out.println("************************************orphan**********************************************");
         User user = userRepository.getById(1);
         user.removeVehicle(user.getList().get(0));
         vehicleRepository.findAll().forEach(System.out::println);
+    }
+
+    @Transactional
+    public void removeTester3() {
+        System.out.println("************************************remove**********************************************");
+        User user = userRepository.getById(1);
+        Vehicle vehicle = user.getList().get(0);
+        user.removeVehicle(vehicle);
+        userRepository.delete(user);
     }
 
 
