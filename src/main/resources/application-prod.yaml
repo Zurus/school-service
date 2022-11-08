@@ -3,7 +3,7 @@ spring:
     show-sql: false
     open-in-view: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
       hibernate:
@@ -18,4 +18,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/secure_env
     username: access_su
     password: Jnnheljdghfdtlys[?
+#    username: postgres
+#    password: postgres
     driver-class-name: org.postgresql.Driver
