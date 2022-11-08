@@ -25,7 +25,7 @@ public class Classes extends NamedEntity implements Serializable {
 
     //Классный руководитель
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "classroom_teacher_id", referencedColumnName = "id")
     private User classRoomTeacher;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

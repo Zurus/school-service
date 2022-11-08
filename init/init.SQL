@@ -52,14 +52,6 @@ create table classes
     primary key (id)
 );
 
-create table classroom_teachers
-(
-    id       serial not null,
-    class_id int4,
-    user_id  int4,
-    primary key (id)
-);
-
 create table event
 (
     id            serial not null,
@@ -122,22 +114,12 @@ alter table if exists users
 alter table if exists classes
     add constraint classes_classroom_teacher_id_fk
         foreign key (classroom_teacher_id)
-            references classroom_teachers;
+            references users;
 
 alter table if exists classes
     add constraint classes_school_id_fk
         foreign key (school_id)
             references schools;
-
-alter table if exists classroom_teachers
-    add constraint classroom_teachers_class_id_fk
-        foreign key (class_id)
-            references classes;
-
-alter table if exists classroom_teachers
-    add constraint classroom_teachers_user_id_fk
-        foreign key (user_id)
-            references users;
 
 alter table if exists event
     add constraint events_user_id_fk
