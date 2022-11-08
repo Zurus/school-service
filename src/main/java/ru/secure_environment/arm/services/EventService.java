@@ -13,9 +13,12 @@ import ru.secure_environment.arm.repository.CardRepository;
 import ru.secure_environment.arm.repository.EventRepository;
 import ru.secure_environment.arm.util.DtoUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,6 +28,16 @@ public class EventService {
     private final EventRepository eventRepository;
     private final CardRepository cardRepository;
     private final EventMapper eventMapper;
+    private final static SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+
+    @Transactional
+    public void clearEvents(Date borderDate) {
+        log.info("remove events before date = {}", formatter.format(borderDate));
+        List<Integer> ids = eventRepository.getAllByEventTimeBefore(borderDate)
+                .stream().map(Event::getId)
+                .collect(Collectors.toList());
+        eventRepository.deleteEventsWithIds(ids);
+    }
 
     @Transactional
     public List<EventResultDto> saveEvent(List<EventDto> list) {

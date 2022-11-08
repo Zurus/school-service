@@ -13,7 +13,7 @@ import static ru.secure_environment.arm.UserTestUtil.USER_MATCHER_DTO;
 @ActiveProfiles("test")
 public class UserDtoMapperTest {
 
-    private static final String jsonWithoutPassword = "{\"id\":1,\"name\":\"User\",\"email\":\"user@gmail.com\",\"phoneNumber\":\"+79026165214\",\"schoolId\":\"A1B2C3D4E5F6A7B8C9D0E1F2A3B4C5D6\",\"cardId\":\"056,35766\",\"telegram\":\"asdf\",\"classNumber\":\"1A\",\"roles\":[\"USER\"]}";
+    private static final String jsonWithoutPassword = "{\"id\":1,\"name\":\"User\",\"email\":\"user@gmail.com\",\"phoneNumber\":\"+79026165214\",\"schoolId\":\"A1B2C3D4E5F6A7B8C9D0E1F2A3B4C5D6\",\"cardId\":\"056,35766\",\"telegram\":\"asdf\",\"classNumber\":\"1A\",\"position\":null,\"roles\":[\"USER\"]}";
 
     private static final String jsonString = "{\n" +
             "  \"id\": 1,\n" +

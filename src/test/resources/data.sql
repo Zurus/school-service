@@ -23,10 +23,10 @@ INSERT INTO USERS (EMAIL, NAME, PASSWORD, PHONE_NUMBER, CARD_ID, TELEGRAM, CLASS
 VALUES ('user@gmail.com', 'User', '{noop}password', '+79026165214', 1, 'asdf', 1),
        ('admin@javaops.ru', 'Admin', '{noop}admin', '+79872832442', 2, null, 1),
        ('sigur@javaops.ru', 'sigur_AI', '{noop}sigur', '+11111111111', 3, null, 1),
-       ('new_user@javaops.ru', 'simple_AI', '{noop}simple', '+11111111111', 4, null, 2),
        ('super_teacher@mail.ru', 'math_teacher', '{noop}password', '+79174816110', 6, null, 3),
        ('super_cleaner@mail.ru', 'cleaner', '{noop}password', '+79174816110', 7, null, 4),
-       ('fedua@mail.ru', 'fedua', '{noop}pass', '+79174816110', 8, null, 2);
+       ('fedua@mail.ru', 'fedua', '{noop}pass', '+79174816110', 8, null, 2),
+       ('new_user@javaops.ru', 'simple_AI', '{noop}simple', '+11111111111', 4, null, 2);
 
 INSERT INTO USER_ROLE (ROLE, USER_ID)
 VALUES ('USER', 1),
@@ -34,8 +34,13 @@ VALUES ('USER', 1),
        ('USER', 2),
        ('USER', 3),
        ('SIGUR', 3),
-       ('USER', 5);
+       ('USER', 4);
 
 
 INSERT INTO EVENTS (ID, LOG_ID, EVENT_TYPE, EVENT_TIME, CARD_ID)
-VALUES (1, 100170, 2, '2022-10-10', 1);
+VALUES (1, 100170, 2, '2022-10-10', 1),
+       (2, 100171, 2, '2021-10-10', 1),
+       (3, 100172, 2, '2019-10-10', 1),
+       (4, 100173, 2, '2022-09-10', 1),
+       (5, 100174, 2, '2019-09-09', 1),
+       (6, 100175, 2, '2019-10-09', 1);
