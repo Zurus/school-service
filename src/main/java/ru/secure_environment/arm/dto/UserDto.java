@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import ru.secure_environment.arm.model.enums.Role;
 import ru.secure_environment.arm.util.validation.HasSchool;
 import ru.secure_environment.arm.util.validation.NoHtml;
@@ -15,6 +16,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -22,20 +26,20 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class UserDto implements Serializable {
 
     public UserDto(Builder builder) {
         this.id = builder.getId();
         this.name = builder.getName();
         this.email = builder.getEmail();
-        this.phoneNumber = builder.getPhoneNumber();
         this.schoolId = builder.getSchoolId();
         this.cardId = builder.getCardId();
-        this.telegram = builder.getTelegram();
         this.classNumber = builder.getClassNumber();
         this.roles = builder.getRoles();
         this.password = builder.getPassword();
         this.position = builder.getPosition();
+        this.contacts = builder.getContacts();
     }
 
     private Integer id;
@@ -63,18 +67,20 @@ public class UserDto implements Serializable {
     @NotBlank
     private String cardId;
 
-    private String telegram;
-
     private String classNumber;
 
     private String position;
 
     private Set<Role> roles;
 
-    @Override
-    public String toString() {
-        return "UserDto:" + id + "[" + email + "]";
-    }
+    @NotNull
+    private List<ContactDto> contacts;
+
+//    @Override
+//    public String toString() {
+//        return "UserDto:" + id + "[" + email + "]";
+//    }
+
 
     @Getter
     public static class Builder {
@@ -85,13 +91,9 @@ public class UserDto implements Serializable {
 
         private String email;
 
-        private String phoneNumber;
-
         private String schoolId;
 
         private String cardId;
-
-        private String telegram;
 
         private String classNumber;
 
@@ -101,18 +103,46 @@ public class UserDto implements Serializable {
 
         private Set<Role> roles;
 
+        private List<ContactDto> contacts;
+
         public Builder(Integer id, String name) {
             this.id = id;
             this.name = name;
         }
 
-        public Builder email(String email) {
-            this.email = email;
+        public Builder contacts(List<ContactDto> contacts) {
+            this.contacts = contacts;
             return this;
         }
 
-        public Builder phoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
+        public Builder contacts(Integer id, String phoneNumber, String telegram) {
+            return contacts(new ContactDto(id, phoneNumber, telegram));
+        }
+
+        public Builder contacts(String phoneNumber, String telegram) {
+            return contacts(new ContactDto(null, phoneNumber, telegram));
+        }
+
+        public Builder contacts(ContactDto contactDto) {
+            this.contacts = Arrays.asList(contactDto);
+            return this;
+        }
+
+        public Builder addContact(Integer id, String phoneNumber, String telegram) {
+            return addContact(new ContactDto(id, phoneNumber, telegram));
+        }
+
+        public Builder addContact(String phoneNumber, String telegram) {
+            return addContact(new ContactDto(null, phoneNumber, telegram));
+        }
+
+        public Builder addContact(ContactDto contactDto) {
+            this.contacts.add(contactDto);
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
             return this;
         }
 
@@ -125,12 +155,6 @@ public class UserDto implements Serializable {
             this.cardId = cardId;
             return this;
         }
-
-        public Builder telegram(String telegram) {
-            this.telegram = telegram;
-            return this;
-        }
-
 
         public Builder classNumber(String classNumber) {
             this.classNumber = classNumber;

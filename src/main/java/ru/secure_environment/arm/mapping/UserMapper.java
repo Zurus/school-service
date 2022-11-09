@@ -36,7 +36,6 @@ public interface UserMapper {
         if (!UserUtil.isEmployee(classNumber)) {
             return classNumber;
         }
-
         return null;
     }
 

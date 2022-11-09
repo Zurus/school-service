@@ -5,10 +5,12 @@ import ru.secure_environment.arm.dto.EventResultDto;
 import ru.secure_environment.arm.dto.SchoolDto;
 import ru.secure_environment.arm.dto.UserDto;
 import ru.secure_environment.arm.model.Card;
+import ru.secure_environment.arm.model.Contact;
 import ru.secure_environment.arm.model.User;
 import ru.secure_environment.arm.model.enums.Role;
 import ru.secure_environment.arm.util.CardKeyUtil;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 
@@ -44,26 +46,29 @@ public class MockData {
     public static final Card cardAdmin = new Card(2, ADMIN_CARD_ID_HEX);
     public static final Card newUserCard = new Card(5, CardKeyUtil.toHexString(NEW_USER_CARD_ID));
 
-    public static final User user = new User(USER_ID, "User", USER_MAIL, "password", USER_PHONE, cardUser, USER_TELEGRAM, Role.USER);
-    public static final User admin = new User(ADMIN_ID, "Admin", ADMIN_MAIL, "admin", ADMIN_PHONE, cardAdmin, null, Role.USER, Role.ADMIN);
-    public static final User newUser = new User(NEW_ID, NEW_NAME, NEW_MAIL, NEW_PASS, NEW_PHONE, newUserCard, NEW_TELEGRAM, Role.USER);
+    public static final Contact userContact = new Contact(1, USER_PHONE, USER_TELEGRAM);
+    public static final Contact adminContact = new Contact(2, ADMIN_PHONE, null);
+    public static final Contact newUserContact = new Contact(8, NEW_PHONE, NEW_TELEGRAM);
+
+    public static final User user = new User(USER_ID, "User", "password", USER_MAIL, cardUser, Arrays.asList(userContact), Role.USER);
+    public static final User admin = new User(ADMIN_ID, "Admin", "admin", ADMIN_MAIL, cardAdmin, Arrays.asList(adminContact), Role.USER, Role.ADMIN);
+    public static final User newUser = new User(NEW_ID, NEW_NAME, NEW_PASS, NEW_MAIL, newUserCard, Arrays.asList(newUserContact), Role.USER);
 
     public static final UserDto userDto =
             new UserDto.Builder(USER_ID, "User")
                     .email(USER_MAIL)
-                    .phoneNumber(USER_PHONE)
                     .schoolId(SCHOOL_ID)
                     .cardId(USER_CARD_ID_DEC)
-                    .telegram(USER_TELEGRAM)
                     .classNumber(CLASS_NUMBER)
                     .roles(Collections.singleton(Role.USER))
                     .password("asdfadsf")
+                    .contacts(1, USER_PHONE, USER_TELEGRAM)
                     .build();
 
     public static final UserDto adminDto =
             new UserDto.Builder(ADMIN_ID, "Admin")
                     .email(ADMIN_MAIL)
-                    .phoneNumber(ADMIN_PHONE)
+                    .contacts(2, ADMIN_PHONE, null)
                     .schoolId(SCHOOL_ID)
                     .cardId(ADMIN_CARD_ID_DEC)
                     .classNumber(CLASS_NUMBER)
@@ -73,7 +78,7 @@ public class MockData {
     public static final UserDto sigurMock =
             new UserDto.Builder(3, "sigur_AI")
                     .email("sigur@javaops.ru")
-                    .phoneNumber("+11111111111")
+                    .contacts(3, "+11111111111", null)
                     .schoolId(SCHOOL_ID)
                     .cardId("111,12345")
                     .classNumber(CLASS_NUMBER)
@@ -83,10 +88,9 @@ public class MockData {
     public static final UserDto newDto =
             new UserDto.Builder(null, NEW_NAME)
                     .email("some@mail.ru")
-                    .phoneNumber(NEW_PHONE)
+                    .contacts(NEW_PHONE, NEW_TELEGRAM)
                     .schoolId(SCHOOL_ID)
                     .cardId(NEW_USER_CARD_ID)
-                    .telegram(NEW_TELEGRAM)
                     .classNumber(CLASS_NUMBER)
                     .roles(Collections.singleton(Role.USER))
                     .password(NEW_PASS)
@@ -95,7 +99,7 @@ public class MockData {
     public static final UserDto invalidDto =
             new UserDto.Builder(null, "")
                     .email("11111")
-                    .phoneNumber("asdfasdf")
+                    .contacts("asdfasdf", null)
                     .schoolId("school_id")
                     .cardId(null)
                     .classNumber(CLASS_NUMBER)
@@ -106,7 +110,7 @@ public class MockData {
     public static final UserDto employeeDto =
             new UserDto.Builder(4, "math_teacher")
                     .email("super_teacher@mail.ru")
-                    .phoneNumber("+79174816110")
+                    .contacts(4,"+79174816110", null)
                     .schoolId("A1B2C3D4E5F6A7B8C9D0E1F2A3B41234")
                     .cardId("156,58651")
                     .position("Педработники")

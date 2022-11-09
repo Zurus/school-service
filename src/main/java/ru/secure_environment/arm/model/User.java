@@ -7,21 +7,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.secure_environment.arm.model.common.NamedEntity;
 import ru.secure_environment.arm.model.enums.Role;
+import ru.secure_environment.arm.util.validation.NoContacts;
 import ru.secure_environment.arm.util.validation.NoHtml;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -33,33 +36,23 @@ import java.util.Set;
 public class User extends NamedEntity implements Serializable {
 
     public User(User u) {
-        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.getPhoneNumber(), u.getCard(), u.getTelegram(), u.getRoles());
+        this(u.getId(), u.getName(), u.getPassword(), u.getEmail(), u.getCard(), u.getContacts(), u.getRoles());
     }
 
-    public User(Integer id, String name, String email, String password, String phoneNumber,
-                Card card, String telegram, Role role, Role... roles) {
-        this(id, name, email, password, phoneNumber, card, telegram, EnumSet.of(role, roles));
+    public User(Integer id, String name, String password, String email,
+                Card card, List<Contact> contacts, Role role, Role... roles) {
+        this(id, name, password, email, card, contacts, EnumSet.of(role, roles));
     }
 
-    public User(Integer id, String name, String email, String password, String phoneNumber,
-                Card card, String telegram, Collection<Role> roles) {
+    public User(Integer id, String name, String password, String email, Card card,
+                List<Contact> contacts, Collection<Role> roles) {
         super(id, name);
         this.email = email;
+        this.contacts = contacts;
         this.password = password;
-        this.phoneNumber = phoneNumber;
         this.card = card;
-        this.telegram = telegram;
         setRoles(roles);
     }
-
-    @Column(name = "phone_number", nullable = false)
-    //@NotNull
-    //@NotBlank
-    @Pattern(regexp = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$", message = "Wrong phone number")
-    private String phoneNumber;
-
-    @Column(name = "telegram")
-    private String telegram;
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
@@ -92,7 +85,7 @@ public class User extends NamedEntity implements Serializable {
     @JoinColumn(name = "class_id", nullable = false)
     private Classes schoolClass;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "card_id", nullable = false)
     private Card card;
 
@@ -106,6 +99,24 @@ public class User extends NamedEntity implements Serializable {
                             nullable = false, updatable = false)})
     private Set<Message> messages;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(name = "user_contacts",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "contact_id"),
+            uniqueConstraints = @UniqueConstraint(name = "user_contact_uk", columnNames = {"user_id", "contact_id"}))
+    @NoContacts
+    private List<Contact> contacts = new ArrayList<>();
+
+    public void addContact(Contact contact) {
+        contacts.add(contact);
+        contact.getUsers().add(this);
+    }
+
+    public void removeContact(Contact contact) {
+        contacts.remove(contact);
+        contact.getUsers().remove(contact);
+    }
+
     public void setEmail(String email) {
         this.email = StringUtils.hasText(email) ? email.toLowerCase() : null;
     }
@@ -116,11 +127,10 @@ public class User extends NamedEntity implements Serializable {
 
     public User updateUser(User user) {
         setIfNotNull(this::setPassword, user.getPassword());
-        setIfNotNull(this::setEmail, user.getEmail());
         setIfNotNull(this::setName, user.getName());
-        setIfNotNull(this::setPhoneNumber, user.getPhoneNumber());
-        setIfNotNull(this::setTelegram, user.getTelegram());
+        setIfNotNull(this::setEmail, user.getEmail());
         setIfNotNull(this::setRoles, user.getRoles());
+        setIfNotNull(this::setContacts, user.getContacts());
         return this;
     }
 

@@ -24,7 +24,7 @@ import java.util.List;
 public class Classes extends NamedEntity implements Serializable {
 
     //Классный руководитель
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "classroom_teacher_id", referencedColumnName = "id")
     private User classRoomTeacher;
 

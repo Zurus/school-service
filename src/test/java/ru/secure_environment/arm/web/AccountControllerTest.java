@@ -85,7 +85,8 @@ public class AccountControllerTest extends AbstractControllerTest {
         user.setName("new_name");
         user.setPassword("new_Password");
 
-        USER_MATCHER.assertMatch(userRepository.getById(USER_ID), user);
+        User user1 = userRepository.getById(USER_ID);
+        USER_MATCHER.assertMatch(user1, user);
     }
 
     @Test
@@ -103,7 +104,7 @@ public class AccountControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void createWithLocation() throws Exception {
+    void create() throws Exception {
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(newDto, NEW_PASS)))
@@ -112,6 +113,7 @@ public class AccountControllerTest extends AbstractControllerTest {
 
         UserDto created = USER_MATCHER_DTO.readFromJson(action);
         newDto.setId(created.getId());
+        newDto.getContacts().get(0).setId(8);
         USER_MATCHER_DTO.assertMatch(newDto, created);
         User user = getUserById(NEW_ID);
         USER_MATCHER.assertMatch(user, newUser);
@@ -131,7 +133,7 @@ public class AccountControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void get_employer() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + EMPLOYEE_ID))
+        ResultActions action = perform(MockMvcRequestBuilders.get(REST_URL + EMPLOYEE_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
