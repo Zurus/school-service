@@ -9,24 +9,26 @@ import ru.secure_environment.arm.model.enums.EventEnum;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import java.io.Serializable;
 import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "events", uniqueConstraints = {@UniqueConstraint(name = "UniqueCardAndLogId", columnNames = {"card_id", "log_id"})})
+@Table(name = "events", uniqueConstraints = {@UniqueConstraint(name = "event_card_id_log_id_uk", columnNames = {"card_id", "log_id"})})
 @Data
 @Entity
 @ToString
-public class Event extends BaseEntity implements Serializable {
+public class Event extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "card_id", nullable = false)
+    @JoinColumn(name = "card_id", nullable = false, foreignKey = @ForeignKey(name = "events_card_id_fk"))
     private Card card;
 
     @Column(name = "event_time")
@@ -36,9 +38,6 @@ public class Event extends BaseEntity implements Serializable {
     private int logId;
 
     @Column(name = "event_type")
-    private int direction;
-
-    public EventEnum getEvent() {
-        return EventEnum.parse(direction);
-    }
+    @Enumerated(EnumType.ORDINAL)
+    private EventEnum direction;
 }

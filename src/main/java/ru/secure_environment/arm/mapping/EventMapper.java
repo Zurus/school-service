@@ -6,6 +6,7 @@ import org.mapstruct.Mappings;
 import org.mapstruct.Named;
 import ru.secure_environment.arm.dto.EventDto;
 import ru.secure_environment.arm.model.Event;
+import ru.secure_environment.arm.model.enums.EventEnum;
 
 import java.util.Date;
 
@@ -14,7 +15,8 @@ public interface EventMapper {
 
     @Mappings({
             @Mapping(target = "eventTime", source = "time", qualifiedByName = "unixTimeToDate"),
-            @Mapping(target = "card", ignore = true)
+            @Mapping(target = "card", ignore = true),
+            @Mapping(target = "direction", source = "direction", qualifiedByName = "enumMapper")
     })
     Event toModel(EventDto userDto);
 
@@ -23,5 +25,10 @@ public interface EventMapper {
     default Date convertFromUnixTime(String time) {
         long unixTime = Long.valueOf(time) * 1000;
         return new Date(unixTime);
+    }
+
+    @Named("enumMapper")
+    default EventEnum convertToEnum(int direction) {
+        return EventEnum.parse(direction);
     }
 }

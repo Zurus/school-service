@@ -39,4 +39,6 @@ public class Contact extends BaseEntity {
     @Column(name = "telegram")
     private String telegram;
 
+    @ManyToMany(mappedBy = "contacts")
+    private Set<Notification> notifications = new HashSet<>();
 }

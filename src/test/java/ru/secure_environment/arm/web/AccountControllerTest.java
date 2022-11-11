@@ -10,14 +10,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.secure_environment.arm.dto.UserDto;
 import ru.secure_environment.arm.model.User;
 import ru.secure_environment.arm.repository.UserRepository;
-import ru.secure_environment.arm.util.JsonUtil;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.secure_environment.arm.MockData.*;
-import static ru.secure_environment.arm.UserTestUtil.*;
+import static ru.secure_environment.arm.UserTestUtil.USER_MATCHER;
+import static ru.secure_environment.arm.UserTestUtil.USER_MATCHER_DTO;
+import static ru.secure_environment.arm.UserTestUtil.jsonWithPassword;
 
 public class AccountControllerTest extends AbstractControllerTest {
 
@@ -94,6 +95,7 @@ public class AccountControllerTest extends AbstractControllerTest {
     void updateInvalid() throws Exception {
         userDto.setName(null);
         userDto.setPhoneNumber("asdfasdf");
+        userDto.setEmail("super_teacher@mail.ru");
 
         perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)

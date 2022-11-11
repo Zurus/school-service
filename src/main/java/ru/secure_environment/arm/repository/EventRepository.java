@@ -3,11 +3,13 @@ package ru.secure_environment.arm.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import ru.secure_environment.arm.model.Event;
 
 import java.util.Date;
 import java.util.List;
 
+@Repository
 public interface EventRepository extends JpaRepository<Event, Integer> {
 
     @Query("SELECT case when COUNT(ev)>0 then true else false end FROM Event ev WHERE ev.logId = :logId AND ev.card.cardId = :cardId")

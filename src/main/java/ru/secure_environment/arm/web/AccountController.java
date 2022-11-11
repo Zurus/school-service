@@ -3,12 +3,13 @@ package ru.secure_environment.arm.web;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,6 +23,7 @@ import ru.secure_environment.arm.mapping.UserListMapper;
 import ru.secure_environment.arm.mapping.UserMapper;
 import ru.secure_environment.arm.model.User;
 import ru.secure_environment.arm.services.AccountService;
+import ru.secure_environment.arm.web.user.UniqueContactsUserValidator;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -39,6 +41,13 @@ public class AccountController {
     private final UserMapper userMapper;
     private final UserListMapper userListMapper;
     private final AccountService accountService;
+    private final UniqueContactsUserValidator contactsValidator;
+
+    //https://www.concretepage.com/spring/spring-mvc/spring-mvc-custom-validator
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(contactsValidator);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> get(@PathVariable int id) {

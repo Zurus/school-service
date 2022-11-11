@@ -1,5 +1,7 @@
 package ru.secure_environment.arm.model.enums;
 
+import ru.secure_environment.arm.error.IllegalRequestDataException;
+
 public enum EventEnum {
     EXIT(1),
     ENTER(2),
@@ -17,14 +19,13 @@ public enum EventEnum {
     }
 
     public static EventEnum parse(int id) {
-        EventEnum status = null; // Default
         for (EventEnum item : EventEnum.values()) {
             if (item.getStatus() == id) {
-                status = item;
-                break;
+                return item;
             }
         }
-        return status;
+
+        throw new IllegalRequestDataException("Event direction didn't found direction = " + id);
     }
 
     public int getStatus() {

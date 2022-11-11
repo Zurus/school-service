@@ -10,7 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "cards")
@@ -18,7 +17,7 @@ import java.io.Serializable;
 @ToString
 @Getter
 @Setter
-public class Card extends BaseEntity implements Serializable {
+public class Card extends BaseEntity  {
 
     public Card(Integer id, String cardId) {
         super(id);
