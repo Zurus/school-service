@@ -2,6 +2,7 @@ package ru.secure_environment.arm.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,7 @@ import java.util.Calendar;
 @Component
 @Slf4j
 @AllArgsConstructor
+@Profile("prod")
 public class ScheduleTask {
 
     private final EventService eventService;

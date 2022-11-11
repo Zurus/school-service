@@ -13,7 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +21,7 @@ import java.util.Set;
 @Table(name = "schools")
 @Data
 @Entity
-public class School extends BaseSerialEntity implements Serializable {
+public class School extends BaseSerialEntity  {
 
     @NotBlank
     @Size(max = 64)

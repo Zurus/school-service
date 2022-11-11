@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ru.secure_environment.arm.model.enums.Role;
+import ru.secure_environment.arm.util.validation.HasEmailAndContactsAndId;
 import ru.secure_environment.arm.util.validation.HasSchool;
 import ru.secure_environment.arm.util.validation.NoHtml;
 
@@ -16,7 +17,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +27,7 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class UserDto implements Serializable {
+public class UserDto implements Serializable, HasEmailAndContactsAndId {
 
     public UserDto(Builder builder) {
         this.id = builder.getId();
