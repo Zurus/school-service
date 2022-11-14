@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static ru.secure_environment.arm.util.validation.ValidationUtil.checkModification;
+
 @Repository
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Integer> {
@@ -52,7 +53,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query("DELETE FROM User u WHERE u.id=:id")
     int delete(int id);
-
 
     default void deleteExisted(int id) {
         checkModification(delete(id), id);

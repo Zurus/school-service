@@ -1,3 +1,7 @@
+INSERT INTO SETTINGS(KEY, VALUE)
+VALUES ('bot.name', 'SecureEnvBot'),('bot.token','5596926556:AAFHZqdaMFrDZ1Dm7fxw404RodHM3p01dzc'),
+('test.key','test.value');
+
 INSERT INTO CARDS (ID, CARD_HEX_CODE)
 VALUES (1, '388BB6'),
        (2, 'FB88FA'),

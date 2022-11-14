@@ -40,10 +40,10 @@
 
     <!-- Log output level -->
     <!-- Levels greater than info will be recorded -->
-<!--    <root level="WARN">-->
-<!--        <appender-ref ref="console"/>-->
-<!--        &lt;!&ndash;		<appender-ref ref="rollingFile" />&ndash;&gt;-->
-<!--    </root>-->
+    <root level="WARN">
+        <appender-ref ref="console"/>
+        <!--		<appender-ref ref="rollingFile" />-->
+    </root>
     <logger name="ru.secure_environment.arm" level="INFO">
         <appender-ref ref="console"/>
         <appender-ref ref="rollingFile"/>
