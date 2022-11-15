@@ -14,8 +14,6 @@ import java.sql.SQLException;
 @AllArgsConstructor
 public class AppConfig {
 
-
-
     @Bean(initMethod = "start", destroyMethod = "stop")
     public Server h2Server() throws SQLException {
         log.info("Start H2 TCP server");

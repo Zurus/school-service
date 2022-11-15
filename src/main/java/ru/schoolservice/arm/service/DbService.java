@@ -14,6 +14,7 @@ public class DbService {
     private static final String KEY = "KEY";
 
     public String getKey () {
+
         return settingsRepository
                 .findByKey(KEY)
                 .orElseThrow(()-> new RuntimeException("не найден параметр: " + KEY )).getValue();

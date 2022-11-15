@@ -9,6 +9,9 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,7 +21,11 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @ToString
-public class Settings extends BaseEntity {
+public class Settings  {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Integer id;
 
     @Column(name="key")
     private String key;
