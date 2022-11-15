@@ -1,15 +1,15 @@
 package ru.schoolservice.arm.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.schoolservice.arm.model.User;
+import ru.schoolservice.arm.model.Settings;
 
-import java.util.List;
 import java.util.Optional;
 
-//@Transactional(readOnly = true)
+@Transactional(readOnly = true)
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface SettingsRepository extends JpaRepository<Settings, Integer> {
+
+    Optional<Settings> findByKey(String key);
 }
