@@ -28,6 +28,7 @@ public class TelegramBotNotification extends TelegramLongPollingBot implements T
     @Autowired
     public TelegramBotNotification(SettingsSource settingsSource) {
         this.settingsSource = settingsSource;
+        this.commandContainer = new CommandContainer();
     }
 
     @Override

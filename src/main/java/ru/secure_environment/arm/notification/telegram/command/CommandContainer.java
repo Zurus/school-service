@@ -12,7 +12,6 @@ import static ru.secure_environment.arm.notification.telegram.command.CommandEnu
 import static ru.secure_environment.arm.notification.telegram.command.CommandEnum.STOP;
 
 
-@Component
 @Slf4j
 public class CommandContainer {
 
