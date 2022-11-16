@@ -26,7 +26,7 @@ public class JsonUtil {
         try {
             return reader.<T>readValues(json).readAll();
         } catch (IOException e) {
-            throw new IllegalArgumentException(ExceptionTextUtil.invalidReadArrayFromJson(json), e);
+            throw new IllegalArgumentException(TextUtil.invalidReadArrayFromJson(json), e);
         }
     }
 
@@ -34,7 +34,7 @@ public class JsonUtil {
         try {
             return objectMapper.readValue(json, clazz);
         } catch (IOException e) {
-            throw new IllegalArgumentException(ExceptionTextUtil.invalidReadFromJson(json), e);
+            throw new IllegalArgumentException(TextUtil.invalidReadFromJson(json), e);
         }
     }
 
@@ -43,7 +43,7 @@ public class JsonUtil {
             String s = objectMapper.writeValueAsString(obj);
             return s;
         } catch (JsonProcessingException e) {
-            throw new IllegalStateException(ExceptionTextUtil.invalidWriteToJson(obj), e);
+            throw new IllegalStateException(TextUtil.invalidWriteToJson(obj), e);
         }
     }
 

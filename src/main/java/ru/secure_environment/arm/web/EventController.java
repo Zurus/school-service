@@ -13,6 +13,7 @@ import ru.secure_environment.arm.dto.EventLogsDto;
 import ru.secure_environment.arm.dto.EventResultDto;
 import ru.secure_environment.arm.error.ServerWorkException;
 import ru.secure_environment.arm.services.EventService;
+import ru.secure_environment.arm.services.NotificatorService;
 
 import java.util.Comparator;
 import java.util.List;
@@ -26,6 +27,7 @@ public class EventController {
     public static final String URL = "/api/event";
 
     private final EventService eventService;
+    private final NotificatorService notificatorService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EventResultDto> create(@RequestBody EventLogsDto events) {
@@ -34,6 +36,7 @@ public class EventController {
         EventResultDto resultDto = resultDtoList.stream().max(Comparator.comparingInt(EventResultDto::getConfirmedLogId)).orElseThrow(
                 () -> new ServerWorkException("cannot save event list = " + events)
         );
+        notificatorService.sendNotifications(resultDtoList);
         return ResponseEntity.ok(resultDto);
     }
 }

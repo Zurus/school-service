@@ -21,7 +21,7 @@ import ru.secure_environment.arm.util.UserUtil;
 
 import java.util.List;
 
-import static ru.secure_environment.arm.util.ExceptionTextUtil.idWasNotFound;
+import static ru.secure_environment.arm.util.TextUtil.idWasNotFound;
 import static ru.secure_environment.arm.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.secure_environment.arm.util.validation.ValidationUtil.checkNew;
 

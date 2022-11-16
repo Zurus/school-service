@@ -29,9 +29,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 
     @Query("SELECT u FROM User u WHERE u.card.cardId = :cardId")
+    @Transactional
     Optional<User> findByCardId(String cardId);
 
-//    @EntityGraph(attributePaths = {"roles"})
+    //    @EntityGraph(attributePaths = {"roles"})
 //    List<User> findAll();
 
 //    @Override

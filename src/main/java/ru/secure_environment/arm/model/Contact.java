@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import ru.secure_environment.arm.model.common.BaseEntity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -27,9 +28,10 @@ public class Contact extends BaseEntity {
         super(id);
         this.phoneNumber = phoneNumber;
         this.telegram = telegram;
+        this.chatId = null;
     }
 
-    @ManyToMany(mappedBy = "contacts")
+    @ManyToMany(mappedBy = "contacts", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private Set<User> users = new HashSet<>();
 
     @Column(name = "phone_number", nullable = false)
@@ -38,6 +40,9 @@ public class Contact extends BaseEntity {
 
     @Column(name = "telegram")
     private String telegram;
+
+    @Column(name = "chat_id")
+    private String chatId;
 
     @ManyToMany(mappedBy = "contacts")
     private Set<Notification> notifications = new HashSet<>();

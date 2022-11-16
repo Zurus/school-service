@@ -44,6 +44,7 @@ public class User extends NamedEntity {
                 List<Contact> contacts, Collection<Role> roles) {
         super(id, name);
         this.email = email;
+        this.withNotifications = false;
         this.contacts = contacts;
         this.password = password;
         this.card = card;
@@ -92,6 +93,9 @@ public class User extends NamedEntity {
             uniqueConstraints = @UniqueConstraint(name = "user_contact_uk", columnNames = {"user_id", "contact_id"}))
     @NoContacts
     private List<Contact> contacts = new ArrayList<>();
+
+    @Column(name="with_notifications", nullable = false)
+    private boolean withNotifications;
 
     public void addContact(Contact contact) {
         contacts.add(contact);

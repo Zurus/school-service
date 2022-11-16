@@ -7,7 +7,7 @@ import ru.secure_environment.arm.error.IllegalRequestDataException;
 import ru.secure_environment.arm.model.common.BaseEntity;
 import ru.secure_environment.arm.model.common.HasId;
 
-import static ru.secure_environment.arm.util.ExceptionTextUtil.idWasNotFound;
+import static ru.secure_environment.arm.util.TextUtil.idWasNotFound;
 
 @UtilityClass
 public class ValidationUtil {

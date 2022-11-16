@@ -58,17 +58,6 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-rest</artifactId>
-            <exclusions>
-                <!-- exclude deprecated module in favor of spring-data-rest-hal-explorer -->
-                <exclusion>
-                    <groupId>org.springframework.data</groupId>
-                    <artifactId>spring-data-rest-hal-browser</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
@@ -87,12 +76,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <!--            <exclusions>-->
-            <!--                <exclusion>-->
-            <!--                    <groupId>junit</groupId>-->
-            <!--                    <artifactId>junit</artifactId>-->
-            <!--                </exclusion>-->
-            <!--            </exclusions>-->
             <scope>test</scope>
         </dependency>
         <!--        https://www.baeldung.com/spring-security-integration-tests        -->

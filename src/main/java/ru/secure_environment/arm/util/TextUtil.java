@@ -2,9 +2,10 @@ package ru.secure_environment.arm.util;
 
 import lombok.experimental.UtilityClass;
 import ru.secure_environment.arm.model.User;
+import ru.secure_environment.arm.model.enums.EventEnum;
 
 @UtilityClass
-public class ExceptionTextUtil {
+public class TextUtil {
 
     public static String employeeValidationError(User user) {
         return "for employee '" + user + "' job title must not be null or empty";

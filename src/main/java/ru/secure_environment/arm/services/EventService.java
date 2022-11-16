@@ -65,7 +65,7 @@ public class EventService {
             }
             event.setCard(card);
             event = eventRepository.save(event);
-            resultList.add(new EventResultDto(event.getLogId()));
+            resultList.add(new EventResultDto(event.getLogId(), eventDto.getKeyHex(), event.getDirection()));
         }
         return resultList;
     }
