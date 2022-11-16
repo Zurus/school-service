@@ -1,7 +1,6 @@
 package ru.secure_environment.arm.notification.telegram.command;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.secure_environment.arm.notification.telegram.TelegramBotSender;
 import ru.secure_environment.arm.services.TelegramService;

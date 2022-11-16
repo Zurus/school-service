@@ -1,7 +1,6 @@
 package ru.secure_environment.arm.util;
 
 import lombok.experimental.UtilityClass;
-import org.mapstruct.Named;
 
 @UtilityClass
 public class CardKeyUtil {

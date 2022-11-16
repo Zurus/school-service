@@ -5,7 +5,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import ru.secure_environment.arm.dto.UserDto;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static ru.secure_environment.arm.MockData.userDto;
 import static ru.secure_environment.arm.UserTestUtil.USER_MATCHER_DTO;
 

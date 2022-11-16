@@ -37,7 +37,6 @@ public class NotificatorService {
         });
     }
 
-
     private String getTextDirection(EventEnum eventEnum) {
         switch (eventEnum) {
             case EXIT:
@@ -48,5 +47,4 @@ public class NotificatorService {
                 return "неизвестно";
         }
     }
-
 }
