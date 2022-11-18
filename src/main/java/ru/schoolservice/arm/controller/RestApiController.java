@@ -7,11 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.schoolservice.arm.model.User;
 import ru.schoolservice.arm.repository.UserRepository;
@@ -20,13 +22,19 @@ import java.util.List;
 
 @RestController
 //@NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 @Slf4j
-@RequestMapping(value="/api")
+@RequestMapping(value = "/api")
 public class RestApiController {
 
-    @Autowired
     private UserRepository repository;
+
+    @RequestMapping(value = "/user/{id}")
+    //@Transactional
+    public ResponseEntity<User> getUser(@PathVariable int id) {
+        log.info("Get user id = {}", id);
+        return ResponseEntity.ok(repository.findUserById(id).get());
+    }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public List<User> getUsers() {

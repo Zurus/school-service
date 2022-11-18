@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "vehicles")
@@ -18,7 +19,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Data
 @ToString(exclude = {"user"})
-public class Vehicle extends BaseEntity {
+public class Vehicle extends BaseEntity implements Serializable {
 
     public Vehicle(String serial) {
         this.serial = serial;

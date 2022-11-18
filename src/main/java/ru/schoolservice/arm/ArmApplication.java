@@ -5,17 +5,14 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ru.schoolservice.arm.model.User;
-import ru.schoolservice.arm.model.Vehicle;
+import org.springframework.cache.annotation.EnableCaching;
 import ru.schoolservice.arm.repository.UserRepository;
 import ru.schoolservice.arm.repository.VehicleRepository;
 import ru.schoolservice.arm.service.DbService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SpringBootApplication
 @AllArgsConstructor
+@EnableCaching
 public class ArmApplication implements ApplicationRunner {
 
     private final UserRepository userRepository;
@@ -35,8 +32,8 @@ public class ArmApplication implements ApplicationRunner {
 //        dbService.orphanTester();
 //        dbService.removeTester1();
         //dbService.removeTester2();
-        dbService.removeTester3();
-        userRepository.findAll().forEach(System.out::println);
+//        dbService.removeTester3();
+//        userRepository.findAll().forEach(System.out::println);
 
 //        System.out.println("**************************************newUser******************************************");
 //        User user = new User("new_name");
