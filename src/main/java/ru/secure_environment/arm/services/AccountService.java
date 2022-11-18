@@ -35,12 +35,12 @@ public class AccountService {
     private final SchoolClassRepository classRepository;
     private final CardRepository cardRepository;
 
-
     public void delete(int id) {
         userRepository.deleteExisted(id);
     }
 
     public User getUser(int id) {
+        log.info("find user by id {}", id);
         User user = userRepository.findById(id).orElseThrow(
                 () -> new UsernameNotFoundException(idWasNotFound(id))
         );
@@ -49,11 +49,13 @@ public class AccountService {
 
     @Transactional
     public List<User> getUsersFromSchool(String id) {
+        log.info("find all users by school {}", id);
         return userRepository.findUserBySchoolClass(id);
     }
 
     @Transactional
     public User createNewUser(UserDto userDto) {
+        log.info("creating new user {}", userDto);
         User user = userMapper.toModel(userDto);
         Classes classes = classRepository.findClassesByIdAndName(userDto.getSchoolId(), userDto.getClassNumber()).orElseThrow(
                 () -> new IllegalRequestDataException("cannot find class schoolId=" + userDto.getSchoolId() + " classNumber = " + userDto.getClassNumber())
@@ -70,6 +72,7 @@ public class AccountService {
 
     @Transactional
     public void updateUser(UserDto userDto, int id) {
+        log.info("updating user {}", userDto);
         User user = userMapper.toModel(userDto);
         Classes classes = classRepository.findClassesByIdAndName(userDto.getSchoolId(), userDto.getClassNumber()).orElseThrow(
                 () -> new IllegalRequestDataException("cannot find class schoolId=" + userDto.getSchoolId() + " classNumber = " + userDto.getClassNumber())
@@ -82,10 +85,6 @@ public class AccountService {
         user.setCard(card);
         assureIdConsistent(user, id);
         prepareAndSave(user);
-    }
-
-    public List<User> getAll() {
-        return userRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     private User prepareAndSave(User user) {

@@ -20,8 +20,10 @@ public class TelegramService {
 
     @Transactional
     public NotificationSubscribeEnum start(String userName, String chatId) {
+        log.info("{} wants to subscribe", userName);
         Contact contact = getContact(userName);
         if (Objects.nonNull(contact.getChatId())) {
+            log.warn("{} already subscribed", userName);
             return NotificationSubscribeEnum.ALREADY_STARTED;
         }
         contact.setChatId(chatId);
@@ -32,8 +34,10 @@ public class TelegramService {
 
     @Transactional
     public NotificationSubscribeEnum stop(String userName) {
+        log.info("{} wants to unsubscribe", userName);
         Contact contact = getContact(userName);
         if (Objects.isNull(contact.getChatId())) {
+            log.info("{} already unsubscribe", userName);
             return NotificationSubscribeEnum.ALREADY_STOPPED;
         }
         contact.setChatId(null);

@@ -27,12 +27,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 //    @Cacheable("users")
     Optional<User> findByEmailIgnoreCase(String email);
 
-
     @Query("SELECT u FROM User u WHERE u.card.cardId = :cardId")
     @Transactional
     Optional<User> findByCardId(String cardId);
 
-    //    @EntityGraph(attributePaths = {"roles"})
+    @Query("SELECT u FROM User u WHERE u.card.cardId in :cardId AND u.withNotifications = true")
+    List<User> findAllUserByCard(List<String> cards);
+
+//    @EntityGraph(attributePaths = {"roles"})
 //    List<User> findAll();
 
 //    @Override

@@ -28,6 +28,17 @@ public enum EventEnum {
         throw new IllegalRequestDataException("Event direction didn't found direction = " + id);
     }
 
+    public static String getTextDirection(EventEnum eventEnum) {
+        switch (eventEnum) {
+            case EXIT:
+                return "вышел";
+            case ENTER:
+                return "вошел";
+            default:
+                return "неизвестно";
+        }
+    }
+
     public int getStatus() {
         return status;
     }

@@ -1,31 +1,18 @@
 package ru.secure_environment.arm.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import ru.secure_environment.arm.model.enums.EventEnum;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@ToString
 public class EventResultDto {
 
-    private int confirmedLogId;
-
-    public EventResultDto(int confirmedLogId) {
-        this.confirmedLogId = confirmedLogId;
-    }
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String textDate;
     private String cardId;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private EventEnum direction;
-
-    public void confirmIfBigger(int logId) {
-        if (logId > confirmedLogId) {
-            confirmedLogId = logId;
-        }
-    }
 }

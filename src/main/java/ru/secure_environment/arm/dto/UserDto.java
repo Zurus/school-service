@@ -76,10 +76,10 @@ public class UserDto implements Serializable, HasEmailAndContactsAndId {
     @NotNull
     private List<ContactDto> contacts;
 
-//    @Override
-//    public String toString() {
-//        return "UserDto:" + id + "[" + email + "]";
-//    }
+    @Override
+    public String toString() {
+        return "UserDto:" + id + "[" + email + "]";
+    }
 
 
     @Getter

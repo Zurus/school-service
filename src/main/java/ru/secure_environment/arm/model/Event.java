@@ -25,19 +25,11 @@ import java.util.Date;
 @Data
 @Entity
 @ToString
-public class Event extends BaseEntity {
+public class Event extends AbstractEvent {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "card_id", nullable = false, foreignKey = @ForeignKey(name = "events_card_id_fk"))
     private Card card;
 
-    @Column(name = "event_time")
-    private Date eventTime;
-
-    @Column(name = "log_id")
-    private int logId;
-
-    @Column(name = "event_type")
-    @Enumerated(EnumType.ORDINAL)
-    private EventEnum direction;
+    private String keyHex;
 }

@@ -20,19 +20,20 @@ import static ru.secure_environment.arm.notification.telegram.command.CommandEnu
 public class TelegramBotNotification extends TelegramLongPollingBot implements TelegramBotSender {
 
     private static final String COMMAND_PREFIX = "/";
-    private SettingsSource settingsSource;
-    private CommandContainer commandContainer;
+    private final SettingsSource settingsSource;
+    private final CommandContainer commandContainer;
     protected String botName;
     protected String botToken;
 
     @Autowired
-    public TelegramBotNotification(SettingsSource settingsSource) {
+    public TelegramBotNotification(SettingsSource settingsSource, CommandContainer commandContainer) {
         this.settingsSource = settingsSource;
-        this.commandContainer = new CommandContainer();
+        this.commandContainer = commandContainer;
     }
 
     @Override
     public void onUpdateReceived(Update update) {
+        log.info("{} sent message {}", update.getMessage().getChatId(), update.getMessage().getText());
         if (update.hasMessage()) {
             String message = update.getMessage().getText().trim();
             if (message.startsWith(COMMAND_PREFIX)) {
@@ -43,9 +44,9 @@ public class TelegramBotNotification extends TelegramLongPollingBot implements T
         }
     }
 
-
     @Override
     public void sendMessage(String chatId, String message) {
+        log.info("we sent message {} to {}", message, chatId);
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.enableHtml(true);
@@ -54,7 +55,7 @@ public class TelegramBotNotification extends TelegramLongPollingBot implements T
         try {
             this.execute(sendMessage);
         } catch (TelegramApiException e) {
-            log.error("telegram bot error {}", e);
+            log.error("telegram bot error {}", e.getMessage());
         }
     }
 
