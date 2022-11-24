@@ -27,12 +27,14 @@ public interface EventMapper {
     Event toModel(EventDto eventDto);
 
     @Mappings({
-            @Mapping(target = "eventTime", source = "time", qualifiedByName = "unixTimeToDate")
+            @Mapping(target = "eventTime", source = "time", qualifiedByName = "unixTimeToDate"),
+            @Mapping(target = "direction", source = "direction", qualifiedByName = "enumMapper"),
+            @Mapping(target = "card", source = "keyHex")
     })
     UnknownEvent toUnknownEvent(EventDto eventDto);
 
     @Mappings({
-            @Mapping(target = "card", source = "card.cardId"),
+            @Mapping(target = "cardId", source = "card.cardId"),
             @Mapping(target = "textDate", source = "eventTime", qualifiedByName = "dateToString")
     })
     EventResultDto toResultDto(Event event);

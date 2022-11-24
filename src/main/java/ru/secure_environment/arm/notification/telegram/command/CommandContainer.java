@@ -1,27 +1,29 @@
 package ru.secure_environment.arm.notification.telegram.command;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.secure_environment.arm.services.TelegramService;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.secure_environment.arm.notification.telegram.command.CommandEnum.HELP;
-import static ru.secure_environment.arm.notification.telegram.command.CommandEnum.NO;
-import static ru.secure_environment.arm.notification.telegram.command.CommandEnum.START;
-import static ru.secure_environment.arm.notification.telegram.command.CommandEnum.STOP;
+import static ru.secure_environment.arm.notification.telegram.command.CommandEnum.*;
 
 
 @Slf4j
 @Component
 public class CommandContainer {
 
+    private TelegramService telegramService;
     private final Map<String, Command> commandMap;
 
-    public CommandContainer() {
+    @Autowired
+    public CommandContainer(TelegramService telegramService) {
+        this.telegramService = telegramService;
         commandMap = new HashMap<String, Command>() {{
-            put(START.getCommandName(), new StartCommand());
-            put(STOP.getCommandName(), new StartCommand());
+            put(START.getCommandName(), new StartCommand(telegramService));
+            put(STOP.getCommandName(), new StopCommand(telegramService));
             put(HELP.getCommandName(), new HelpCommand());
             put(NO.getCommandName(), new NoCommand());
         }};

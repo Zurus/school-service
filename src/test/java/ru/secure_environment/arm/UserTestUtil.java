@@ -2,6 +2,7 @@ package ru.secure_environment.arm;
 
 import lombok.experimental.UtilityClass;
 import ru.secure_environment.arm.dto.EventResultDto;
+import ru.secure_environment.arm.dto.EventResultListDto;
 import ru.secure_environment.arm.dto.UserDto;
 import ru.secure_environment.arm.model.School;
 import ru.secure_environment.arm.model.User;
@@ -17,7 +18,7 @@ public class UserTestUtil {
     public static final MatcherFactory.Matcher<School> SCHOOL_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(School.class);
     public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "password", "schoolClass");
     public static final MatcherFactory.Matcher<UserDto> USER_MATCHER_DTO = MatcherFactory.usingIgnoringFieldsComparator(UserDto.class, "password");
-    public static final MatcherFactory.Matcher<EventResultDto> EVENT_RESULT_DTO_MATCHER = MatcherFactory.usingEqualsComparator(EventResultDto.class);
+    public static final MatcherFactory.Matcher<EventResultListDto> EVENT_RESULT_DTO_MATCHER = MatcherFactory.usingEqualsComparator(EventResultListDto.class);
 
     public static School getNewSchool() {
         School school = new School();

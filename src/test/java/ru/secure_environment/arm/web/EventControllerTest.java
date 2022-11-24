@@ -6,6 +6,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.secure_environment.arm.dto.EventResultDto;
+import ru.secure_environment.arm.dto.EventResultListDto;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,7 +28,7 @@ class EventControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        EventResultDto created = EVENT_RESULT_DTO_MATCHER.readFromJson(action);
+        EventResultListDto created = EVENT_RESULT_DTO_MATCHER.readFromJson(action);
         EVENT_RESULT_DTO_MATCHER.assertMatch(RESULT_DTO, created);
     }
 

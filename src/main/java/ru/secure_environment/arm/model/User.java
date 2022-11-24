@@ -95,7 +95,7 @@ public class User extends NamedEntity {
     private List<Contact> contacts = new ArrayList<>();
 
     @Column(name="with_notifications", nullable = false)
-    private boolean withNotifications;
+    private Boolean withNotifications;
 
     public void addContact(Contact contact) {
         contacts.add(contact);

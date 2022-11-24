@@ -31,7 +31,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     Optional<User> findByCardId(String cardId);
 
-    @Query("SELECT u FROM User u WHERE u.card.cardId in :cardId AND u.withNotifications = true")
+    @Query("SELECT u FROM User u WHERE u.card.cardId in :cards AND u.withNotifications = true")
     List<User> findAllUserByCard(List<String> cards);
 
 //    @EntityGraph(attributePaths = {"roles"})

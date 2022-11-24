@@ -16,8 +16,8 @@ spring:
     database: postgresql
   datasource:
     url: jdbc:postgresql://localhost:5432/secure_env
-#    username: access_su
-#    password: Jnnheljdghfdtlys[?
-    username: postgres
-    password: postgres
+    username: access_su
+    password: Jnnheljdghfdtlys[?
+    #    username: postgres
+    #    password: postgres
     driver-class-name: org.postgresql.Driver

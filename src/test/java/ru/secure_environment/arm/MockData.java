@@ -2,6 +2,7 @@ package ru.secure_environment.arm;
 
 import lombok.experimental.UtilityClass;
 import ru.secure_environment.arm.dto.EventResultDto;
+import ru.secure_environment.arm.dto.EventResultListDto;
 import ru.secure_environment.arm.dto.SchoolDto;
 import ru.secure_environment.arm.dto.UserDto;
 import ru.secure_environment.arm.model.Card;
@@ -110,7 +111,7 @@ public class MockData {
     public static final UserDto employeeDto =
             new UserDto.Builder(4, "math_teacher")
                     .email("super_teacher@mail.ru")
-                    .contacts(4,"+79174816110", null)
+                    .contacts(4, "+79174816110", null)
                     .schoolId("A1B2C3D4E5F6A7B8C9D0E1F2A3B41234")
                     .cardId("156,58651")
                     .position("Педработники")
@@ -175,5 +176,5 @@ public class MockData {
 
     //public static Event event = new Event(cardUser, );
 
-    public static final EventResultDto RESULT_DTO = new EventResultDto(100176);
+    public static final EventResultListDto RESULT_DTO = new EventResultListDto(100176);
 }

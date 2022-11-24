@@ -8,8 +8,6 @@ import ru.secure_environment.arm.services.TelegramService;
 @Slf4j
 public abstract class Command {
 
-    protected TelegramService telegramService;
-
     public abstract void execute(Update update, TelegramBotSender telegramBotSender);
 
     protected String getUserName(Update update) {

@@ -71,7 +71,9 @@ public class TelegramBotNotification extends TelegramLongPollingBot implements T
 
     @PostConstruct
     private void init() {
-        botName = settingsSource.getBotName();
-        botToken = settingsSource.getBotToken();
+        botName="SecureEnvBot";
+        botToken="5596926556:AAFHZqdaMFrDZ1Dm7fxw404RodHM3p01dzc";
+        //botName = settingsSource.getBotName();
+        //botToken = settingsSource.getBotToken();
     }
 }
