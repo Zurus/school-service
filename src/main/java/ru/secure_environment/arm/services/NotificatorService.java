@@ -10,6 +10,7 @@ import ru.secure_environment.arm.notification.telegram.TelegramBotSender;
 import ru.secure_environment.arm.repository.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.secure_environment.arm.model.enums.EventEnum.getTextDirection;
@@ -39,6 +40,7 @@ public class NotificatorService {
 
         users.forEach(user -> {
             user.getContacts()
+                    .stream().filter(contact -> Objects.nonNull(contact.getChatId()))
                     .forEach(contact -> {
                         String chatId = contact.getChatId();
                         EventResultDto eventResultDto = getByCard(list, user.getCard().getCardId());
