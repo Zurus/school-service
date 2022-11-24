@@ -18,10 +18,7 @@ import ru.secure_environment.arm.util.DtoUtil;
 import ru.secure_environment.arm.util.validation.EventDtoRequirementComplianceEnum;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,22 +55,29 @@ public class EventService {
                 list.stream()
                         .collect(Collectors.groupingBy(DtoUtil::getEventDtoRequirementComplianceEnum));
 
-        List<Event> correctEventList = eventDtoMap.get(EventDtoRequirementComplianceEnum.CORRECT)
-                .stream()
-                .map(eventDto -> {
-                    Event event = eventMapper.toModel(eventDto);
-                    event.setCard(findCardByHex(cards, event));
-                    return event;
-                })
-                .collect(Collectors.toList());
+        List<EventDto> correctList = eventDtoMap.get(EventDtoRequirementComplianceEnum.CORRECT);
+        final List<Event> correctEventList = new ArrayList<>();
+        if (Objects.nonNull(correctList)) {
+            eventDtoMap.get(EventDtoRequirementComplianceEnum.CORRECT)
+                    .stream()
+                    .map(eventDto -> {
+                        Event event = eventMapper.toModel(eventDto);
+                        event.setCard(findCardByHex(cards, event));
+                        return event;
+                    })
+                    .forEach(correctEventList::add);
+            eventRepository.saveAll(correctEventList);
+        }
 
-        List<UnknownEvent> incorrectEventList = eventDtoMap.get(EventDtoRequirementComplianceEnum.INCORRECT)
-                .stream()
-                .map(eventMapper::toUnknownEvent)
-                .collect(Collectors.toList());
-
-        eventRepository.saveAll(correctEventList);
-        unknownEventRepository.saveAll(incorrectEventList);
+        List<EventDto> incorrectList = eventDtoMap.get(EventDtoRequirementComplianceEnum.INCORRECT);
+        final List<UnknownEvent> incorrectEventList = new ArrayList<>();
+        if (Objects.nonNull(incorrectList)) {
+            eventDtoMap.get(EventDtoRequirementComplianceEnum.INCORRECT)
+                    .stream()
+                    .map(eventMapper::toUnknownEvent)
+                    .forEach(incorrectEventList::add);
+            unknownEventRepository.saveAll(incorrectEventList);
+        }
 
         EventResultListDto eventResultListDto = new EventResultListDto();
         fillDataForNotifications(eventResultListDto, correctEventList);

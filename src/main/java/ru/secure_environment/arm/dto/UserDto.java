@@ -26,7 +26,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString
 public class UserDto implements Serializable, HasEmailAndContactsAndId {
 
     public UserDto(Builder builder) {
@@ -40,6 +39,7 @@ public class UserDto implements Serializable, HasEmailAndContactsAndId {
         this.password = builder.getPassword();
         this.position = builder.getPosition();
         this.contacts = builder.getContacts();
+        this.withNotifications = builder.getWithNotifications();
     }
 
     private Integer id;
@@ -76,11 +76,12 @@ public class UserDto implements Serializable, HasEmailAndContactsAndId {
     @NotNull
     private List<ContactDto> contacts;
 
+    private Boolean withNotifications;
+
     @Override
     public String toString() {
         return "UserDto:" + id + "[" + email + "]";
     }
-
 
     @Getter
     public static class Builder {
@@ -104,6 +105,8 @@ public class UserDto implements Serializable, HasEmailAndContactsAndId {
         private Set<Role> roles;
 
         private List<ContactDto> contacts;
+
+        private Boolean withNotifications;
 
         public Builder(Integer id, String name) {
             this.id = id;
@@ -173,6 +176,11 @@ public class UserDto implements Serializable, HasEmailAndContactsAndId {
 
         public Builder position(String position) {
             this.position = position;
+            return this;
+        }
+
+        public Builder withNotifications(Boolean withNotifications) {
+            this.withNotifications = withNotifications;
             return this;
         }
 

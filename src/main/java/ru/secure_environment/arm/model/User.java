@@ -42,9 +42,14 @@ public class User extends NamedEntity {
 
     public User(Integer id, String name, String password, String email, Card card,
                 List<Contact> contacts, Collection<Role> roles) {
+        this(id,name,password,email,card,contacts,false, roles);
+    }
+
+    public User(Integer id, String name, String password, String email, Card card,
+                List<Contact> contacts, Boolean withNotifications,  Collection<Role> roles) {
         super(id, name);
         this.email = email;
-        this.withNotifications = false;
+        this.withNotifications = withNotifications;
         this.contacts = contacts;
         this.password = password;
         this.card = card;

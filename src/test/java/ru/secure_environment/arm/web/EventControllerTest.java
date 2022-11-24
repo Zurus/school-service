@@ -39,6 +39,6 @@ class EventControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(eventStringAlreadyExisted))
                 .andDo(print())
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isOk());
     }
 }

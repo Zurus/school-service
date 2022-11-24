@@ -1,7 +1,6 @@
 package ru.secure_environment.arm;
 
 import lombok.experimental.UtilityClass;
-import ru.secure_environment.arm.dto.EventResultDto;
 import ru.secure_environment.arm.dto.EventResultListDto;
 import ru.secure_environment.arm.dto.SchoolDto;
 import ru.secure_environment.arm.dto.UserDto;
@@ -31,7 +30,7 @@ public class MockData {
     public static final String USER_CARD_ID_HEX = "388BB6";
     public static final String ADMIN_CARD_ID_DEC = "251,35066";
     public static final String ADMIN_CARD_ID_HEX = "FB88FA";
-    public static final String USER_TELEGRAM = "asdf";
+    public static final String USER_TELEGRAM = "am_div";
     public static final Boolean USER_IS_EMPLOYEE = false;
     public static final String CLASS_NUMBER = "1A";
     public static final Boolean CLASS_ROOM_TEACHER = false;
@@ -51,7 +50,7 @@ public class MockData {
     public static final Contact adminContact = new Contact(2, ADMIN_PHONE, null);
     public static final Contact newUserContact = new Contact(8, NEW_PHONE, NEW_TELEGRAM);
 
-    public static final User user = new User(USER_ID, "User", "password", USER_MAIL, cardUser, Arrays.asList(userContact), Role.USER);
+    public static final User user = new User(USER_ID, "User", "password", USER_MAIL, cardUser, Arrays.asList(userContact), Boolean.TRUE, Collections.singleton(Role.USER));
     public static final User admin = new User(ADMIN_ID, "Admin", "admin", ADMIN_MAIL, cardAdmin, Arrays.asList(adminContact), Role.USER, Role.ADMIN);
     public static final User newUser = new User(NEW_ID, NEW_NAME, NEW_PASS, NEW_MAIL, newUserCard, Arrays.asList(newUserContact), Role.USER);
 
@@ -61,6 +60,7 @@ public class MockData {
                     .schoolId(SCHOOL_ID)
                     .cardId(USER_CARD_ID_DEC)
                     .classNumber(CLASS_NUMBER)
+                    .withNotifications(true)
                     .roles(Collections.singleton(Role.USER))
                     .password("asdfadsf")
                     .contacts(1, USER_PHONE, USER_TELEGRAM)
@@ -73,7 +73,8 @@ public class MockData {
                     .schoolId(SCHOOL_ID)
                     .cardId(ADMIN_CARD_ID_DEC)
                     .classNumber(CLASS_NUMBER)
-                    .roles(EnumSet.of(Role.USER, Role.ADMIN))
+                    .withNotifications(true)
+                    .roles(EnumSet.of(Role.ADMIN, Role.USER))
                     .build();
 
     public static final UserDto sigurMock =
@@ -83,6 +84,7 @@ public class MockData {
                     .schoolId(SCHOOL_ID)
                     .cardId("111,12345")
                     .classNumber(CLASS_NUMBER)
+                    .withNotifications(true)
                     .roles(EnumSet.of(Role.USER, Role.SIGUR))
                     .build();
 
@@ -93,6 +95,7 @@ public class MockData {
                     .schoolId(SCHOOL_ID)
                     .cardId(NEW_USER_CARD_ID)
                     .classNumber(CLASS_NUMBER)
+                    .withNotifications(false)
                     .roles(Collections.singleton(Role.USER))
                     .password(NEW_PASS)
                     .build();
@@ -115,6 +118,7 @@ public class MockData {
                     .schoolId("A1B2C3D4E5F6A7B8C9D0E1F2A3B41234")
                     .cardId("156,58651")
                     .position("Педработники")
+                    .withNotifications(true)
                     .roles(Collections.singleton(Role.USER))
                     .build();
 
