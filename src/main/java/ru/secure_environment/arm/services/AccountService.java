@@ -3,18 +3,13 @@ package ru.secure_environment.arm.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.secure_environment.arm.dto.UserDto;
 import ru.secure_environment.arm.error.IllegalRequestDataException;
 import ru.secure_environment.arm.mapping.UserMapper;
-import ru.secure_environment.arm.model.Card;
-import ru.secure_environment.arm.model.Classes;
 import ru.secure_environment.arm.model.User;
-import ru.secure_environment.arm.repository.CardRepository;
-import ru.secure_environment.arm.repository.SchoolClassRepository;
 import ru.secure_environment.arm.repository.UserRepository;
 import ru.secure_environment.arm.util.CardKeyUtil;
 import ru.secure_environment.arm.util.UserUtil;
@@ -32,8 +27,6 @@ public class AccountService {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
-    private final SchoolClassRepository classRepository;
-    private final CardRepository cardRepository;
 
     public void delete(int id) {
         userRepository.deleteExisted(id);
@@ -47,25 +40,12 @@ public class AccountService {
         return user;
     }
 
-    @Transactional
-    public List<User> getUsersFromSchool(String id) {
-        log.info("find all users by school {}", id);
-        return userRepository.findUserBySchoolClass(id);
-    }
 
     @Transactional
     public User createNewUser(UserDto userDto) {
         log.info("creating new user {}", userDto);
         User user = userMapper.toModel(userDto);
-        Classes classes = classRepository.findClassesByIdAndName(userDto.getSchoolId(), userDto.getClassNumber()).orElseThrow(
-                () -> new IllegalRequestDataException("cannot find class schoolId=" + userDto.getSchoolId() + " classNumber = " + userDto.getClassNumber())
-        );
         final String cardIdHex = CardKeyUtil.toHexString(userDto.getCardId());
-        Card card = cardRepository.findCardByCardId(cardIdHex).orElseThrow(
-                () -> new IllegalRequestDataException("cannot find card=" + cardIdHex)
-        );
-        user.setSchoolClass(classes);
-        user.setCard(card);
         checkNew(user);
         return prepareAndSave(user);
     }
@@ -74,15 +54,7 @@ public class AccountService {
     public void updateUser(UserDto userDto, int id) {
         log.info("updating user {}", userDto);
         User user = userMapper.toModel(userDto);
-        Classes classes = classRepository.findClassesByIdAndName(userDto.getSchoolId(), userDto.getClassNumber()).orElseThrow(
-                () -> new IllegalRequestDataException("cannot find class schoolId=" + userDto.getSchoolId() + " classNumber = " + userDto.getClassNumber())
-        );
-        user.setSchoolClass(classes);
         final String cardIdHex = CardKeyUtil.toHexString(userDto.getCardId());
-        Card card = cardRepository.findCardByCardId(cardIdHex).orElseThrow(
-                () -> new IllegalRequestDataException("cannot find card=" + cardIdHex)
-        );
-        user.setCard(card);
         assureIdConsistent(user, id);
         prepareAndSave(user);
     }

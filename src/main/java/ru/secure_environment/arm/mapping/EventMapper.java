@@ -7,7 +7,6 @@ import org.mapstruct.Named;
 import ru.secure_environment.arm.dto.EventDto;
 import ru.secure_environment.arm.dto.EventResultDto;
 import ru.secure_environment.arm.model.Event;
-import ru.secure_environment.arm.model.UnknownEvent;
 import ru.secure_environment.arm.model.enums.EventEnum;
 
 import java.text.Format;
@@ -21,20 +20,12 @@ public interface EventMapper {
 
     @Mappings({
             @Mapping(target = "eventTime", source = "time", qualifiedByName = "unixTimeToDate"),
-            @Mapping(target = "card", ignore = true),
             @Mapping(target = "direction", source = "direction", qualifiedByName = "enumMapper")
     })
     Event toModel(EventDto eventDto);
 
-    @Mappings({
-            @Mapping(target = "eventTime", source = "time", qualifiedByName = "unixTimeToDate"),
-            @Mapping(target = "direction", source = "direction", qualifiedByName = "enumMapper"),
-            @Mapping(target = "card", source = "keyHex")
-    })
-    UnknownEvent toUnknownEvent(EventDto eventDto);
 
     @Mappings({
-            @Mapping(target = "cardId", source = "card.cardId"),
             @Mapping(target = "textDate", source = "eventTime", qualifiedByName = "dateToString")
     })
     EventResultDto toResultDto(Event event);

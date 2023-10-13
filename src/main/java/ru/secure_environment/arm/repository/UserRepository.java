@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.secure_environment.arm.model.User;
 
-import java.util.List;
 import java.util.Optional;
 
 import static ru.secure_environment.arm.util.validation.ValidationUtil.checkModification;
@@ -19,20 +18,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 //    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles")
 //    List<User> getAllBy();
 
-    @Query("SELECT u FROM User u WHERE u.schoolClass.school.id = :schoolId")
-    @Transactional
-    List<User> findUserBySchoolClass(String schoolId);
 
     @Query("SELECT u FROM User u WHERE u.email = LOWER(:email)")
 //    @Cacheable("users")
     Optional<User> findByEmailIgnoreCase(String email);
 
-    @Query("SELECT u FROM User u WHERE u.card.cardId = :cardId")
-    @Transactional
-    Optional<User> findByCardId(String cardId);
-
-    @Query("SELECT u FROM User u WHERE u.card.cardId in :cards AND u.withNotifications = true")
-    List<User> findAllUserByCard(List<String> cards);
 
 //    @EntityGraph(attributePaths = {"roles"})
 //    List<User> findAll();

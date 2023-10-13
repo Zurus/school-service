@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.secure_environment.arm.dto.EventResultDto;
 import ru.secure_environment.arm.model.User;
-import ru.secure_environment.arm.notification.telegram.TelegramBotSender;
 import ru.secure_environment.arm.repository.UserRepository;
 
 import java.util.List;
@@ -25,7 +24,6 @@ public class NotificatorService {
                     "%s в %s успешно %s.\n" +
                     "←\n";
 
-    private final TelegramBotSender telegramBotSender;
     private final UserRepository userRepository;
 
     @Transactional
@@ -36,23 +34,6 @@ public class NotificatorService {
                 .map(EventResultDto::getCardId)
                 .collect(Collectors.toList());
 
-        List<User> users = userRepository.findAllUserByCard(cards);
-
-        users.forEach(user -> {
-            user.getContacts()
-                    .stream().filter(contact -> Objects.nonNull(contact.getChatId()))
-                    .forEach(contact -> {
-                        String chatId = contact.getChatId();
-                        EventResultDto eventResultDto = getByCard(list, user.getCard().getCardId());
-                        telegramBotSender.sendMessage(chatId,
-                                String.format(NOTIFICATION,
-                                        user.getName(),
-                                        eventResultDto.getTextDate(),
-                                        getTextDirection(eventResultDto.getDirection()))
-                        );
-                    });
-        });
-        //todo:добавить сохранение уведомлений в базу
     }
 
     private EventResultDto getByCard(List<EventResultDto> list, String cardId) {

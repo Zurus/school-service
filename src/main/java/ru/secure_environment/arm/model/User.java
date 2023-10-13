@@ -11,16 +11,13 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.secure_environment.arm.model.common.NamedEntity;
 import ru.secure_environment.arm.model.enums.Role;
-import ru.secure_environment.arm.util.validation.NoContacts;
 import ru.secure_environment.arm.util.validation.NoHtml;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -32,27 +29,23 @@ import java.util.Set;
 public class User extends NamedEntity {
 
     public User(User u) {
-        this(u.getId(), u.getName(), u.getPassword(), u.getEmail(), u.getCard(), u.getContacts(), u.getRoles());
+        this(u.getId(), u.getName(), u.getPassword(), u.getEmail(), u.getRoles());
     }
 
     public User(Integer id, String name, String password, String email,
-                Card card, List<Contact> contacts, Role role, Role... roles) {
-        this(id, name, password, email, card, contacts, EnumSet.of(role, roles));
+               Role role, Role... roles) {
+        this(id, name, password, email, EnumSet.of(role, roles));
     }
 
-    public User(Integer id, String name, String password, String email, Card card,
-                List<Contact> contacts, Collection<Role> roles) {
-        this(id,name,password,email,card,contacts,false, roles);
+    public User(Integer id, String name, String password, String email, Collection<Role> roles) {
+        this(id,name,password,email,false, roles);
     }
 
-    public User(Integer id, String name, String password, String email, Card card,
-                List<Contact> contacts, Boolean withNotifications,  Collection<Role> roles) {
+    public User(Integer id, String name, String password, String email, Boolean withNotifications,  Collection<Role> roles) {
         super(id, name);
         this.email = email;
         this.withNotifications = withNotifications;
-        this.contacts = contacts;
         this.password = password;
-        this.card = card;
         setRoles(roles);
     }
 
@@ -83,34 +76,11 @@ public class User extends NamedEntity {
     @Size(max = 1024)
     private byte[] photo;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "class_id", nullable = false, foreignKey = @ForeignKey(name = "user_classes_id_fk"))
-    private Classes schoolClass;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn(name = "card_id", nullable = false, foreignKey = @ForeignKey(name = "user_card_id_fk"))
-    private Card card;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(name = "user_contacts",
-            joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "user_contacts_user_id_fk")),
-            inverseJoinColumns = @JoinColumn(name = "contact_id", foreignKey = @ForeignKey(name = "user_contacts_contact_id_fk")),
-            uniqueConstraints = @UniqueConstraint(name = "user_contact_uk", columnNames = {"user_id", "contact_id"}))
-    @NoContacts
-    private List<Contact> contacts = new ArrayList<>();
 
     @Column(name="with_notifications", nullable = false)
     private Boolean withNotifications;
 
-    public void addContact(Contact contact) {
-        contacts.add(contact);
-        contact.getUsers().add(this);
-    }
-
-    public void removeContact(Contact contact) {
-        contacts.remove(contact);
-        contact.getUsers().remove(contact);
-    }
 
     public void setEmail(String email) {
         this.email = StringUtils.hasText(email) ? email.toLowerCase() : null;
@@ -125,7 +95,6 @@ public class User extends NamedEntity {
         setIfNotNull(this::setName, user.getName());
         setIfNotNull(this::setEmail, user.getEmail());
         setIfNotNull(this::setRoles, user.getRoles());
-        setIfNotNull(this::setContacts, user.getContacts());
         return this;
     }
 

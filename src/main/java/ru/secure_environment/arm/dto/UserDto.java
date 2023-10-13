@@ -6,10 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import ru.secure_environment.arm.model.enums.Role;
 import ru.secure_environment.arm.util.validation.HasEmailAndContactsAndId;
-import ru.secure_environment.arm.util.validation.HasSchool;
 import ru.secure_environment.arm.util.validation.NoHtml;
 
 import javax.validation.constraints.Email;
@@ -32,7 +30,6 @@ public class UserDto implements Serializable, HasEmailAndContactsAndId {
         this.id = builder.getId();
         this.name = builder.getName();
         this.email = builder.getEmail();
-        this.schoolId = builder.getSchoolId();
         this.cardId = builder.getCardId();
         this.classNumber = builder.getClassNumber();
         this.roles = builder.getRoles();
@@ -57,11 +54,6 @@ public class UserDto implements Serializable, HasEmailAndContactsAndId {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-
-    @NotNull
-    @NotBlank
-    @HasSchool
-    private String schoolId;
 
     @NotNull
     @NotBlank

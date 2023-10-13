@@ -79,10 +79,4 @@ public class AccountController {
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(userMapper.toDTO(created));
     }
-
-    @GetMapping(value = "/school/{id}")
-    public ResponseEntity<List<UserDto>> getUsers(@PathVariable String id) {
-        log.info("find all by school {}", id);
-        return ResponseEntity.ok(userListMapper.toUserListDto(accountService.getUsersFromSchool(id)));
-    }
 }

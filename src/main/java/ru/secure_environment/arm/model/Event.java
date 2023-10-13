@@ -21,15 +21,11 @@ import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "events", uniqueConstraints = {@UniqueConstraint(name = "event_card_id_log_id_uk", columnNames = {"card_id", "log_id"})})
+@Table(name = "events")
 @Data
 @Entity
 @ToString
 public class Event extends AbstractEvent {
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "card_id", nullable = false, foreignKey = @ForeignKey(name = "events_card_id_fk"))
-    private Card card;
 
     private String keyHex;
 }

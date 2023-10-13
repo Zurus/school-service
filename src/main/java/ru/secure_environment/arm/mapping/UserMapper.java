@@ -13,11 +13,7 @@ import ru.secure_environment.arm.util.UserUtil;
 public interface UserMapper {
 
     @Mappings({
-            @Mapping(source = "schoolClass.name", target = "classNumber", qualifiedByName = "classNumberMapper"),
-            @Mapping(source = "schoolClass.name", target = "position", qualifiedByName = "positionMapper"),
-            @Mapping(source = "schoolClass.school.id", target = "schoolId"),
             @Mapping(source = "password", target = "password", ignore = true),
-            @Mapping(source = "card.cardId", target = "cardId", qualifiedByName = "cardKeyToDec")
     })
     UserDto toDTO(User user);
 

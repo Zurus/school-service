@@ -2,10 +2,7 @@ package ru.secure_environment.arm;
 
 import lombok.experimental.UtilityClass;
 import ru.secure_environment.arm.dto.EventResultListDto;
-import ru.secure_environment.arm.dto.SchoolDto;
 import ru.secure_environment.arm.dto.UserDto;
-import ru.secure_environment.arm.model.Card;
-import ru.secure_environment.arm.model.Contact;
 import ru.secure_environment.arm.model.User;
 import ru.secure_environment.arm.model.enums.Role;
 import ru.secure_environment.arm.util.CardKeyUtil;
@@ -42,17 +39,10 @@ public class MockData {
     public static final String NEW_USER_CARD_ID = "156,35761";
     public static final String NEW_TELEGRAM = "telega";
 
-    public static final Card cardUser = new Card(1, USER_CARD_ID_HEX);
-    public static final Card cardAdmin = new Card(2, ADMIN_CARD_ID_HEX);
-    public static final Card newUserCard = new Card(5, CardKeyUtil.toHexString(NEW_USER_CARD_ID));
 
-    public static final Contact userContact = new Contact(1, USER_PHONE, USER_TELEGRAM);
-    public static final Contact adminContact = new Contact(2, ADMIN_PHONE, null);
-    public static final Contact newUserContact = new Contact(8, NEW_PHONE, NEW_TELEGRAM);
-
-    public static final User user = new User(USER_ID, "User", "password", USER_MAIL, cardUser, Arrays.asList(userContact), Boolean.TRUE, Collections.singleton(Role.USER));
-    public static final User admin = new User(ADMIN_ID, "Admin", "admin", ADMIN_MAIL, cardAdmin, Arrays.asList(adminContact), Role.USER, Role.ADMIN);
-    public static final User newUser = new User(NEW_ID, NEW_NAME, NEW_PASS, NEW_MAIL, newUserCard, Arrays.asList(newUserContact), Role.USER);
+    public static final User user = new User(USER_ID, "User", "password", USER_MAIL,  Boolean.TRUE, Collections.singleton(Role.USER));
+    public static final User admin = new User(ADMIN_ID, "Admin", "admin", ADMIN_MAIL,  Role.USER, Role.ADMIN);
+    public static final User newUser = new User(NEW_ID, NEW_NAME, NEW_PASS, NEW_MAIL,  Role.USER);
 
     public static final UserDto userDto =
             new UserDto.Builder(USER_ID, "User")
@@ -121,8 +111,6 @@ public class MockData {
                     .withNotifications(true)
                     .roles(Collections.singleton(Role.USER))
                     .build();
-
-    public static final SchoolDto schoolDto = new SchoolDto(SCHOOL_ID, "Аксаковская гимназия №11");
 
     public static String eventString = "{\n" +
             "  \"logs\": [\n" +

@@ -8,12 +8,8 @@ import ru.secure_environment.arm.dto.EventDto;
 import ru.secure_environment.arm.dto.EventResultListDto;
 import ru.secure_environment.arm.mapping.EventMapper;
 import ru.secure_environment.arm.model.AbstractEvent;
-import ru.secure_environment.arm.model.Card;
 import ru.secure_environment.arm.model.Event;
-import ru.secure_environment.arm.model.UnknownEvent;
-import ru.secure_environment.arm.repository.CardRepository;
 import ru.secure_environment.arm.repository.EventRepository;
-import ru.secure_environment.arm.repository.UnknownEventRepository;
 import ru.secure_environment.arm.util.DtoUtil;
 import ru.secure_environment.arm.util.validation.EventDtoRequirementComplianceEnum;
 
@@ -27,9 +23,7 @@ import java.util.stream.Collectors;
 public class EventService {
 
     private final EventRepository eventRepository;
-    private final CardRepository cardRepository;
     private final EventMapper eventMapper;
-    private final UnknownEventRepository unknownEventRepository;
     private final static SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
     @Transactional
@@ -49,7 +43,6 @@ public class EventService {
                 .map(EventDto::getKeyHex)
                 .collect(Collectors.toList());
 
-        List<Card> cards = cardRepository.findAllCardByCardHex(cardsHex);
 
         Map<EventDtoRequirementComplianceEnum, List<EventDto>> eventDtoMap =
                 list.stream()
@@ -62,7 +55,6 @@ public class EventService {
                     .stream()
                     .map(eventDto -> {
                         Event event = eventMapper.toModel(eventDto);
-                        event.setCard(findCardByHex(cards, event));
                         return event;
                     })
                     .forEach(correctEventList::add);
@@ -70,14 +62,7 @@ public class EventService {
         }
 
         List<EventDto> incorrectList = eventDtoMap.get(EventDtoRequirementComplianceEnum.INCORRECT);
-        final List<UnknownEvent> incorrectEventList = new ArrayList<>();
-        if (Objects.nonNull(incorrectList)) {
-            eventDtoMap.get(EventDtoRequirementComplianceEnum.INCORRECT)
-                    .stream()
-                    .map(eventMapper::toUnknownEvent)
-                    .forEach(incorrectEventList::add);
-            unknownEventRepository.saveAll(incorrectEventList);
-        }
+
 
         EventResultListDto eventResultListDto = new EventResultListDto();
         fillDataForNotifications(eventResultListDto, correctEventList);
@@ -85,7 +70,6 @@ public class EventService {
         eventResultListDto.setConfirmedLogId(findMaxConfirmedId(
                 new ArrayList<AbstractEvent>() {{
                     addAll(correctEventList);
-                    addAll(incorrectEventList);
                 }}
         ));
 
@@ -106,12 +90,5 @@ public class EventService {
                 .map(abstractEvent -> abstractEvent.getLogId())
                 .max(Integer::compareTo)
                 .get();
-    }
-
-    private Card findCardByHex(List<Card> cards, Event event) {
-        return cards
-                .stream()
-                .filter(card -> card.getCardId().equals(event.getKeyHex()))
-                .findFirst().get();
     }
 }

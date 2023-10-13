@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.secure_environment.arm.model.common.BaseEntity;
-import ru.secure_environment.arm.model.enums.NotificationEnum;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -32,15 +31,11 @@ public class Notification extends BaseEntity {
     @NotBlank
     private String text;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "notification_type", nullable = false)
-    private NotificationEnum messageEnum;
-
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "notification_contact",
-            joinColumns = @JoinColumn(name = "notification_id", foreignKey = @ForeignKey(name = "notification_contact_notification_id_fk")),
-            inverseJoinColumns = @JoinColumn(name = "contact_id", foreignKey = @ForeignKey(name="notification_contact_contact_id")),
-            uniqueConstraints = @UniqueConstraint(name = "notification_contact_uk", columnNames = {"notification_id", "contact_id"})
-    )
-    private List<Contact> contacts = new ArrayList<>();
+//    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+//    @JoinTable(name = "notification_contact",
+//            joinColumns = @JoinColumn(name = "notification_id", foreignKey = @ForeignKey(name = "notification_contact_notification_id_fk")),
+//            inverseJoinColumns = @JoinColumn(name = "contact_id", foreignKey = @ForeignKey(name="notification_contact_contact_id")),
+//            uniqueConstraints = @UniqueConstraint(name = "notification_contact_uk", columnNames = {"notification_id", "contact_id"})
+//    )
+//    private List<Contact> contacts = new ArrayList<>();
 }

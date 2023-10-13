@@ -12,9 +12,6 @@ import java.util.List;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Integer> {
 
-    @Query("SELECT case when COUNT(ev)>0 then true else false end FROM Event ev WHERE ev.logId = :logId AND ev.card.cardId = :cardId")
-    Boolean existsEventByCardIdAndLogId(String cardId, int logId);
-
     List<Event> getAllByEventTimeBefore(Date borderDate);
 
     @Modifying
