@@ -5,10 +5,15 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.context.annotation.Bean;
 import ru.schoolservice.arm.repository.UserRepository;
-import ru.schoolservice.arm.repository.VehicleRepository;
-import ru.schoolservice.arm.service.DbService;
+
+import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 @AllArgsConstructor
@@ -16,8 +21,6 @@ import ru.schoolservice.arm.service.DbService;
 public class ArmApplication implements ApplicationRunner {
 
     private final UserRepository userRepository;
-    private final VehicleRepository vehicleRepository;
-    private final DbService dbService;
 
     public static void main(String[] args) {
         SpringApplication.run(ArmApplication.class, args);
@@ -52,4 +55,20 @@ public class ArmApplication implements ApplicationRunner {
 //        userRepository.deleteById(2);
 //        vehicleRepository.findAll().forEach(System.out::println);
     }
+
+
+//    @Bean("habrCacheManager")
+//    public CacheManager cacheManager() {
+//        return new ConcurrentMapCacheManager() {
+//            @Override
+//            protected Cache createConcurrentMapCache(String name) {
+//                return new ConcurrentMapCache(
+//                        name,
+//                        CacheBuilder.newBuilder()
+//                                .expireAfterWrite(1, TimeUnit.SECONDS)
+//                                .build().asMap(),
+//                        false);
+//            }
+//        };
+//    }
 }
