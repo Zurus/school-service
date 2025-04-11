@@ -25,8 +25,9 @@ import javax.persistence.MappedSuperclass;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class BaseEntity implements Persistable<Integer> {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     protected Integer id;
 
     public int id() {
