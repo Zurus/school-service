@@ -14,9 +14,9 @@ public class toDto {
         CacheDto dto = new CacheDto();
         dto.setId(entity.getId());
         dto.setCache(entity.getCache());
-//        if (entity.getUser() != null) {
-//            dto.setUserId(entity.getUser().getId());
-//        }
+        if (entity.getUser() != null) {
+            dto.setUserId(entity.getUser().getId());
+        }
         return dto;
     }
 
@@ -33,14 +33,14 @@ public class toDto {
         dto.setEmail(entity.getEmail());
         dto.setTimurId(entity.getTimurId());
 
-        // Маппинг списка Cache
-//        if (entity.getCaches() != null) {
-//            dto.setCaches(
-//                    entity.getCaches().stream()
-//                            .map(toDto::toDto)
-//                            .collect(Collectors.toList())
-//            );
-//        }
+//         Маппинг списка Cache
+        if (entity.getCaches() != null) {
+            dto.setCaches(
+                    entity.getCaches().stream()
+                            .map(toDto::toDto)
+                            .collect(Collectors.toList())
+            );
+        }
 
         return dto;
     }

@@ -40,11 +40,10 @@ public class ArmApplication implements ApplicationRunner, Checker {
     }
 
     @Override
-    @Transactional
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("**************************************findAll******************************************");
         init("name", "shit", "vai", 2, 3);
-        List<User> list = userRepository.findAllByTimurId(1);
+        List<User> list = userRepository.findAllByTimurIdWithCaches(1);
         List<UserDto> listDtos = list.stream().map(toDto::toDto).collect(Collectors.toList());
         update_dto(listDtos);
         saveAlt(listDtos, 1);
@@ -64,110 +63,13 @@ public class ArmApplication implements ApplicationRunner, Checker {
         userRepository.saveAll(users);
     }
 
-    @Transactional
-    public void save(List<UserDto> userDtos) {
-        // 1. Собираем все ID из DTO
-        Set<Integer> dtoUserIds = userDtos.stream()
-                .map(UserDto::getId)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
-
-        // 2. Удаление: один запрос
-        if (!dtoUserIds.isEmpty()) {
-            userRepository.deleteAllByIdNotIn(dtoUserIds);
-        } else {
-            userRepository.deleteAll();
-        }
-
-        // 3. Пакетная загрузка существующих пользователей: один запрос
-        Map<Integer, User> existingUsers = userRepository.findAllById(dtoUserIds)
-                .stream()
-                .collect(Collectors.toMap(User::getId, Function.identity()));
-
-        // 4. Пакетная обработка кэшей
-        processAllCaches(userDtos);
-
-        // 5. Пакетное сохранение: несколько запросов (зависит от batch size)
-        List<User> usersToSave = userDtos.stream()
-                .map(dto -> convertToEntity(dto, existingUsers.get(dto.getId())))
-                .collect(Collectors.toList());
-
-        userRepository.saveAll(usersToSave);
-    }
-
-    private User convertToEntity(UserDto dto, User existing) {
-        User user = existing != null ? existing : new User();
-        // Обновляем поля
-        user.setEmail(dto.getEmail());
-        user.setTimurId(dto.getTimurId());
-
-        // Обработка кэшей
-        syncCaches(user, dto.getCaches());
-
-        return user;
-    }
-
-    private void processAllCaches(List<UserDto> userDtos) {
-        // 1. Собираем все ID кэшей
-        Set<Integer> cacheIds = userDtos.stream()
-                .flatMap(dto -> dto.getCaches().stream())
-                .map(CacheDto::getId)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
-
-        // 2. Загружаем все кэши одним запросом
-        Map<Integer, Cache> existingCaches = cacheRepository.findAllById(cacheIds)
-                .stream()
-                .collect(Collectors.toMap(Cache::getId, Function.identity()));
-
-        // 3. Обновляем кэши в DTO
-        userDtos.forEach(dto ->
-                dto.getCaches().forEach(cacheDto -> {
-                    if (cacheDto.getId() != null) {
-                        Cache cache = existingCaches.get(cacheDto.getId());
-                        if (cache != null) {
-                            cache.setCache(cacheDto.getCache());
-                        }
-                    }
-                })
-        );
-    }
-
-    private void syncCaches(User user, List<CacheDto> cacheDtos) {
-        // 1. Удаляем отсутствующие кэши
-        Set<Integer> dtoCacheIds = cacheDtos.stream()
-                .map(CacheDto::getId)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
-
-//        user.getCaches().removeIf(cache ->
-//                !dtoCacheIds.contains(cache.getId())
-//        );
-
-        // 2. Добавляем/обновляем кэши
-//        cacheDtos.forEach(dto -> {
-//            Cache cache = dto.getId() != null ?
-//                    user.getCaches().stream()
-//                            .filter(c -> c.getId().equals(dto.getId()))
-//                            .findFirst()
-//                            .orElse(new Cache()) :
-//                    new Cache();
-//
-//            cache.setCache(dto.getCache());
-//            cache.setUser(user);
-//
-//            if (!user.getCaches().contains(cache)) {
-//                user.getCaches().add(cache);
-//            }
-//        });
-    }
 
     private void init(String timurName, String userName, String cacheName, int userCount, int cacheCount) {
         Timur timur = new Timur(timurName);
         timurRepository.save(timur);
         int counter = 0;
         for (int i = 0; i < userCount; i++) {
-            User user1 = new User(userName + i, timur.getId());
+            User user1 = new User(userName + i, timur.getId(), null);
             for (int j = 0; j < cacheCount; j++) {
                 initCache(user1, cacheName, counter++);
             }
@@ -176,7 +78,7 @@ public class ArmApplication implements ApplicationRunner, Checker {
     }
 
     public void initCache(User user, String cacheName, int count) {
-        //user.add(new Cache(cacheName + count, null));
+        user.add(new Cache(cacheName + count, null));
     }
 
 

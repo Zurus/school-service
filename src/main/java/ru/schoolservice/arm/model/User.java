@@ -1,16 +1,11 @@
 package ru.schoolservice.arm.model;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,14 +23,14 @@ public class User extends BaseEntity {
     @Column(name = "timur_id")
     private Integer timurId;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Cache> caches = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Cache> caches = new ArrayList<>();
 //
-//    public void add(Cache cache) {
-//        if (caches == null) {
-//            caches = new ArrayList<>();
-//        }
-//        caches.add(cache);
-//        cache.setUser(this);
-//    }
+    public void add(Cache cache) {
+        if (caches == null) {
+            caches = new ArrayList<>();
+        }
+        caches.add(cache);
+        cache.setUser(this);
+    }
 }

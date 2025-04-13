@@ -1,6 +1,8 @@
 package ru.schoolservice.arm.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.schoolservice.arm.model.User;
 
@@ -21,6 +23,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     void deleteAllByIdIn(Set<Integer> ids);
 
     void deleteAllByTimurId(Integer id);
+
+    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.caches WHERE u.timurId = :timurId")
+    List<User> findAllByTimurIdWithCaches(@Param("timurId") Integer timurId);
 
 //    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles")
 //    List<User> getAllBy();
