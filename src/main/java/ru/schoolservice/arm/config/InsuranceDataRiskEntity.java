@@ -75,6 +75,26 @@ public class InsuranceDataRiskEntity {
         this.absRiskCode = absRiskCode;
     }
 
+
+    @Entity
+    @Table(name = "insurance_data")
+    public class InsuranceDataRiskEntity {
+        // ... существующие поля и методы
+
+        public InsuranceProgramRisk toDto() {
+            InsuranceProgramRisk dto = new InsuranceProgramRisk();
+            dto.setId(this.id);
+            dto.setRiskCode(this.riskCode);
+            dto.setRiskAbsCode(this.absRiskCode);
+
+            if (this.insuranceData != null) {
+                dto.setInsuranceCode(this.insuranceData.getInsuranceCode());
+            }
+
+            return dto;
+        }
+    }
+
     public BigDecimal getInsuranceRate() {
         return insuranceRate;
     }
