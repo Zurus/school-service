@@ -18,7 +18,8 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "caches")
@@ -26,10 +27,14 @@ import javax.persistence.Table;
 @Setter
 public class Cache extends BaseEntity {
 
-    @Column(name = "cache", nullable = false, unique = true)
+    @Column(name = "cache", nullable = false)
     private String cache;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private User user;
+
+    @Column(name = "user_id")
+    private Integer userId;
+
 }

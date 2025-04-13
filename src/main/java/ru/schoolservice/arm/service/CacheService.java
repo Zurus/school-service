@@ -16,7 +16,7 @@ public class CacheService {
 
     @Transactional
     public Cache getCache(Cache cache, Checker checker) {
-        User user = cache.getUser();
+        //User user = cache.getUser();
         return checker.smart(cache);
     }
 }
