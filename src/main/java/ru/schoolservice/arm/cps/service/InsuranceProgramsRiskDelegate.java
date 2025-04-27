@@ -1,6 +1,5 @@
 package ru.schoolservice.arm.cps.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.schoolservice.arm.cps.entity.InsuranceProgramsRiskEntity;
 import ru.schoolservice.arm.cps.mapper.InsuranceProgramsRiskMapper;
@@ -15,14 +14,13 @@ public class InsuranceProgramsRiskDelegate {
     private final InsuranceProgramRiskService insuranceProgramRiskService;
     private final InsuranceProgramsRiskMapper insuranceProgramsRiskMapper;
 
-
     public InsuranceProgramsRiskDelegate(InsuranceProgramRiskService insuranceProgramRiskService, InsuranceProgramsRiskMapper insuranceProgramsRiskMapper) {
         this.insuranceProgramRiskService = insuranceProgramRiskService;
         this.insuranceProgramsRiskMapper = insuranceProgramsRiskMapper;
     }
 
-    public ResponseEntity<List<InsuranceProgramRiskObject>> findRisksByInsuranceCode(String code, Boolean onlyActive) throws Exception {
-        return ResponseEntity.ok(buildResponse(insuranceProgramRiskService.findOnlyActiveByInsuranceProgramCode(code)));
+    public List<InsuranceProgramRiskObject> findRisksByInsuranceCode(String code, Boolean onlyActive) throws Exception {
+        return buildResponse(insuranceProgramRiskService.findOnlyActiveByInsuranceProgramCode(code));
     }
 
     private List<InsuranceProgramRiskObject> buildResponse(List<InsuranceProgramsRiskEntity> listRisk) {

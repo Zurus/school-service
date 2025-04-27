@@ -3,6 +3,8 @@ package ru.schoolservice.arm.cps.entity;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "insurance_programs_risk")
 public class InsuranceProgramsRiskEntity {
 
     @Id

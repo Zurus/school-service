@@ -2,12 +2,15 @@ package ru.schoolservice.arm.cps.entity;
 
 import ru.schoolservice.arm.cps.model.InsuranceRiskObjectType;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@Entity
+@Table(name = "insurance_credit_risk")
 public class InsuranceCreditRiskEntity extends DictionaryEntity {
-
 
     @Column(name = "object_type", length = 50)
     @Enumerated(value = EnumType.STRING)
@@ -15,6 +18,9 @@ public class InsuranceCreditRiskEntity extends DictionaryEntity {
 
     @Column(name = "abs_risk_code", length = 50)
     private String absRiskCode;
+
+    @OneToMany(mappedBy = "comboRisk", fetch = FetchType.LAZY)
+    private List<InsuranceComboRiskEntity> comboRiskRelations = new ArrayList<>();
 
     @Column(name = "is_combined")
     private Boolean isCombined;
@@ -82,6 +88,16 @@ public class InsuranceCreditRiskEntity extends DictionaryEntity {
 
     public void setCombined(Boolean combined) {
         isCombined = combined;
+    }
+
+
+    public List<InsuranceCreditRiskEntity> getCombinedRisks() {
+        if (!Boolean.TRUE.equals(isCombined)) {
+            return Collections.emptyList();
+        }
+        return comboRiskRelations.stream()
+                .map(InsuranceComboRiskEntity::getCombinedRisk)
+                .collect(Collectors.toList());
     }
 
 }

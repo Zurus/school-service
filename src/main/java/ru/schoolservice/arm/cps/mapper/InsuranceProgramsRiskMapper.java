@@ -3,9 +3,14 @@ package ru.schoolservice.arm.cps.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import ru.schoolservice.arm.cps.entity.InsuranceCreditRiskEntity;
 import ru.schoolservice.arm.cps.entity.InsuranceProgramsRiskEntity;
 import ru.schoolservice.arm.cps.model.InsuranceProgramRiskObject;
 import ru.schoolservice.arm.cps.model.InsuranceRiskObjectType;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface InsuranceProgramsRiskMapper {
@@ -20,6 +25,8 @@ public interface InsuranceProgramsRiskMapper {
     @Mapping(source = "entity", target = "riskCode", qualifiedByName = "mapRiskCode")
     @Mapping(target = "nonStandart", source = "nonStandart")
     @Mapping(target = "sure", source = "sure")
+    @Mapping(target = "isCombined", source = "risk.combined")
+    @Mapping(source = "entity", target = "combinedIds", qualifiedByName = "mapCombinedIds")
     InsuranceProgramRiskObject toDto(InsuranceProgramsRiskEntity entity);
 
     @Named("mapProgramCode")
@@ -45,5 +52,17 @@ public interface InsuranceProgramsRiskMapper {
     @Named("mapRiskName")
     default String mapRiskName(InsuranceProgramsRiskEntity entity) {
         return entity.getRisk() != null ? entity.getRisk().getName() : null;
+    }
+
+    @Named("mapCombinedIds")
+    default List<String> mapCombinedIds(InsuranceProgramsRiskEntity entity) {
+        if (entity.getRisk() == null) return Collections.emptyList();
+
+        InsuranceCreditRiskEntity risk = entity.getRisk();
+        if (!Boolean.TRUE.equals(risk.getCombined())) return Collections.emptyList();
+
+        return risk.getCombinedRisks().stream()
+                .map(InsuranceCreditRiskEntity::getCode)
+                .collect(Collectors.toList());
     }
 }

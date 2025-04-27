@@ -1,9 +1,14 @@
 package ru.schoolservice.arm.cps.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Objects;
 
+@Entity
+@Table(name = "insurance_programs")
 public class InsuranceProgramEntity extends DictionaryEntity {
+
     @Column(name = "REPORT_FORM_CODE")
     private String reportFormCode;
 
