@@ -3,20 +3,29 @@ package ru.schoolservice.arm.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.schoolservice.arm.repository.SettingsRepository;
+import org.springframework.transaction.annotation.Transactional;
+import ru.schoolservice.arm.model.Claim;
+import ru.schoolservice.arm.repository.ClaimRepository;
 
 @Service
 @Slf4j
 @AllArgsConstructor
 public class DbService {
 
-    private SettingsRepository settingsRepository;
-    private static final String KEY = "KEY";
+    private ClaimRepository claimRepository;
 
-    public String getKey () {
+    public Claim getClaimWithInsuranceById(Integer id) {
+        return claimRepository.findClaimWithInsurancesById(id);
+    }
 
-        return settingsRepository
-                .findByKey(KEY)
-                .orElseThrow(()-> new RuntimeException("не найден параметр: " + KEY )).getValue();
+    public Claim getClaimById(Integer id) {
+        Claim claim = claimRepository.findById(id).get();
+        String name = claim.getName();
+        return claim;
+    }
+
+    @Transactional
+    public Claim getClaimByIdSave(Integer id) {
+        return claimRepository.getById(id);
     }
 }

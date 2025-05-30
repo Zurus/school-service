@@ -3,13 +3,9 @@ package ru.schoolservice.arm.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.schoolservice.arm.model.Settings;
-
-import java.util.Optional;
+import ru.schoolservice.arm.model.Insurance;
 
 @Transactional(readOnly = true)
 @Repository
-public interface SettingsRepository extends JpaRepository<Settings, Integer> {
-
-    Optional<Settings> findByKey(String key);
+public interface InsuranceRepository extends JpaRepository<Insurance, Integer> {
 }
