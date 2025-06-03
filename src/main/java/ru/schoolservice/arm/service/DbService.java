@@ -20,7 +20,6 @@ public class DbService {
 
     public Claim getClaimById(Integer id) {
         Claim claim = claimRepository.findById(id).get();
-        String name = claim.getName();
         return claim;
     }
 

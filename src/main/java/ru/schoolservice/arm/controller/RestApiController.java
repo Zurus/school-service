@@ -26,17 +26,18 @@ public class RestApiController {
 
     @RequestMapping(value = REQUEST, method = RequestMethod.GET)
     public String getUsers() {
-        System.out.println("*******************1111**************************");
-        Claim claim = dbService.getClaimWithInsuranceById(1);
-        System.out.println("*******************2222**************************");
-        Insurance insurance = claim.getInsurances().stream().findFirst().get();
-        System.out.println("*******************3333**************************");
-        List<Member> mem = insuranceMemberService.getMembersByInsurance(insurance);
-        System.out.println("*******************4444**************************");
+//        System.out.println("*******************1111**************************");
+//        Claim claim = dbService.getClaimWithInsuranceById(1);
+//        System.out.println("*******************2222**************************");
+//        Insurance insurance = claim.getInsurances().stream().findFirst().get();
+//        System.out.println("*******************3333**************************");
+//        List<Member> mem = insuranceMemberService.getMembersByInsurance(insurance);
+//        System.out.println("*******************4444**************************");
         return "KEY";
     }
 
 
+    //
     private void scenario1() {
 
 
