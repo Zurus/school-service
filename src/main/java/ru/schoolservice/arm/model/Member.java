@@ -29,4 +29,6 @@ public class Member {
 
     @Column(name = "value")
     private String value;
+
+
 }

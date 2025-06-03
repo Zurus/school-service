@@ -1,39 +1,38 @@
 package ru.schoolservice.arm.controller;
 
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.schoolservice.arm.model.Claim;
 import ru.schoolservice.arm.model.Insurance;
+import ru.schoolservice.arm.model.Member;
 import ru.schoolservice.arm.service.DbService;
+import ru.schoolservice.arm.service.InsuranceMemberService;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 @RestController
 @Slf4j
+@AllArgsConstructor
 public class RestApiController {
-
     public final static String REQUEST = "/get";
 
-    @Autowired
-    public RestApiController(DbService dbService) {
-        this.dbService = dbService;
-    }
-
     private DbService dbService;
+    private InsuranceMemberService insuranceMemberService;
 
 
     @RequestMapping(value = REQUEST, method = RequestMethod.GET)
     public String getUsers() {
-        //dbService.getKey();
-        System.out.println("*************************************************");
-        Claim claim = dbService.getClaimById(1);
-        String val = claim.getName();
-        List<Insurance> insuranceList = claim.getInsurances();
+        System.out.println("*******************1111**************************");
+        Claim claim = dbService.getClaimWithInsuranceById(1);
+        System.out.println("*******************2222**************************");
+        Insurance insurance = claim.getInsurances().stream().findFirst().get();
+        System.out.println("*******************3333**************************");
+        List<Member> mem = insuranceMemberService.getMembersByInsurance(insurance);
+        System.out.println("*******************4444**************************");
         return "KEY";
     }
 }
