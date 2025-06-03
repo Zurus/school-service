@@ -35,4 +35,11 @@ public class RestApiController {
         System.out.println("*******************4444**************************");
         return "KEY";
     }
+
+
+    private void scenario1() {
+
+
+    }
+
 }

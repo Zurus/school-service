@@ -30,5 +30,6 @@ public class Member {
     @Column(name = "value")
     private String value;
 
-
+    @Column(name = "claim_id")
+    private Integer claimId;
 }
