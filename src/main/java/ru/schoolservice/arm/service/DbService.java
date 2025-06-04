@@ -25,6 +25,10 @@ public class DbService {
     private InsuranceRepository insuranceRepository;
     private RisksRepository risksRepository;
 
+    @Transactional
+    public void saveInsuranceWithRisks(Insurance insurance) {
+        insuranceRepository.save(insurance); // Каскадно сохраняет риски
+    }
 
     public Claim getClaimWithInsuranceById(Integer id) {
         return claimRepository.findClaimWithInsurancesById(id);

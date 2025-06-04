@@ -19,8 +19,10 @@ import ru.schoolservice.arm.model.Risks;
 import ru.schoolservice.arm.service.DbService;
 import ru.schoolservice.arm.service.InsuranceMemberService;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ru.schoolservice.arm.Mock.Mock.createClaimDto;
@@ -52,45 +54,40 @@ public class RestApiController {
         return "KEY";
     }
 
+    @Transactional
+    public void scenario1() {
+        log.info("Processing claim...");
 
-    private void scenario1() {
-        System.out.println("******************* SCENARIO START **********************");
+        final int claimId = 1;
+        Claim claim = dbService.getClaimById(claimId);
+        Map<String, Member> memberMap = dbService.getMembers(claimId).stream()
+                .collect(Collectors.toMap(Member::getValue, m -> m));
 
-        // 1. Получаем claim по ID
-        Claim claim = dbService.getClaimById(1);
-        System.out.println("Claim loaded: " + claim.getId());
-        // 2. Получаем всех участников для claim
-        List<Member> members = dbService.getMembers(claim.getId());
-        System.out.println("Members loaded: " + members.size());
+        ClaimDto claimDto = Mock.createClaimDto(); // Получение DTO из внешнего источника
 
-        ClaimDto claimDto = Mock.createClaimDto();
-
-        for (InsuranceDto insurance : claimDto.getList()) {
-            Insurance insurance1 = Converter.convertToEntity(insurance);
-
-            //List<Risks> risk =
-                    insurance
-                    .getRiskDtos()
-                    .stream()
-                    .map(rk -> {
-                        Risks rke = new Risks();
-                        rke.setInsurance(insurance1);
-                        rke.setName(rk.getName());
-                        rke.setMember(members.stream()
-                                .filter(member -> rk.getMemberValue().equals(member.getValue()))
-                                .findFirst()
-                                .get()
-                        );
-                        return rke;
-                    })
-                    .forEach(rke-> insurance1.addRisk(rke));
-                    //.collect(Collectors.toList());
-
-
-            System.out.println("*****************************************");
-            dbService.save(insurance1);
-            System.out.println("*****************************************");
-            //dbService.save(risk);
+        for (InsuranceDto insuranceDto : claimDto.getList()) {
+            Insurance insurance = createInsuranceWithRisks(insuranceDto, memberMap);
+            dbService.saveInsuranceWithRisks(insurance);
         }
+    }
+
+    private Insurance createInsuranceWithRisks(InsuranceDto dto, Map<String, Member> memberMap) {
+        Insurance insurance = new Insurance();
+        insurance.setValue(dto.getValue());
+        insurance.setClaimId(dto.getClaimId());
+
+        for (RiskDto riskDto : dto.getRiskDtos()) {
+            Member member = memberMap.get(riskDto.getMemberValue());
+            if (member == null) {
+                log.warn("Member not found: {}", riskDto.getMemberValue());
+                continue;
+            }
+
+            Risks risk = new Risks();
+            risk.setName(riskDto.getName());
+            risk.setMember(member);
+            insurance.addRisk(risk); // Автоматически устанавливает связь
+        }
+        return insurance;
     }
 }
