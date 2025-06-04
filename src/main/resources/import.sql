@@ -17,7 +17,7 @@ INSERT INTO insurances (value, claim_id) VALUES ('Договор 1', 1);
 -- INSERT INTO insurances (value, claim_id) VALUES ('Договор 2', 1);
 
 -- Вставка участников (каждая вставка в одной строке)
-INSERT INTO members (value) VALUES ('Иванов Иван');
-INSERT INTO members (value) VALUES ('Петров Петр');
-INSERT INTO members (value) VALUES ('Сидорова Мария');
-INSERT INTO members (value) VALUES ('Козлов Дмитрий');
+INSERT INTO members (value, claim_id) VALUES ('Иванов Иван', 1);
+INSERT INTO members (value, claim_id) VALUES ('Петров Петр', 1);
+INSERT INTO members (value, claim_id) VALUES ('Сидорова Мария', 1);
+INSERT INTO members (value, claim_id) VALUES ('Козлов Дмитрий', 1);

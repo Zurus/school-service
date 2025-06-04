@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "risks")
@@ -21,14 +21,9 @@ public class Risks {
     @Column(name = "name")
     private String name;
 
-    //    @Transient
-    //private String memberValue;
-
     @Column(name = "insurance_program_id")
     private Integer insuranceProgramId;
 
-    //    @Column(name = "member_id")
-//    private Integer memberId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private Member member;

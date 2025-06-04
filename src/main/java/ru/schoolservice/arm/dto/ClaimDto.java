@@ -15,4 +15,5 @@ public class ClaimDto {
     private Integer id;
     private String name;
     List<InsuranceDto> list;
+//    List<MemberDto> memberDtos;
 }
