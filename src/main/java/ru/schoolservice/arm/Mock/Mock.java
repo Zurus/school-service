@@ -57,7 +57,7 @@ public class Mock {
         return new RiskDto(RISK_ID_2, RISK_NAME_2, MEMBER_VALUE_2);
     }
 
-    public static InsuranceDto  createInsuranceDto() {
+    public static InsuranceDto createInsuranceDto() {
         return new InsuranceDto(
                 INSURANCE_CLAIM_1,
                 INSURANCE_CLAIM_NAME_1,
@@ -67,9 +67,9 @@ public class Mock {
         );
     }
 
-    public static InsuranceDto  createNewInsuranceDto() {
+    public static InsuranceDto createNewInsuranceDto() {
         return new InsuranceDto(
-                INSURANCE_CLAIM_1,
+                null,
                 INSURANCE_CLAIM_NAME_1,
                 CLAIM_ID,
                 Arrays.asList(createMemberDto1(), createMemberDto2()),

@@ -21,8 +21,9 @@ public class Risks {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "insurance_program_id")
-    private Integer insuranceProgramId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "insurance_program_id", referencedColumnName = "id")
+    private Insurance insurance;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")

@@ -1,4 +1,3 @@
-DELETE FROM insurance_members;
 DELETE FROM members;
 DELETE FROM insurances;
 DELETE FROM claims;
@@ -7,7 +6,6 @@ DELETE FROM claims;
 ALTER TABLE claims ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE insurances ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE members ALTER COLUMN id RESTART WITH 1;
-ALTER TABLE insurance_members ALTER COLUMN id RESTART WITH 1;
 
 -- Вставка заявок
 INSERT INTO claims (name) VALUES ('Заявка 1');
