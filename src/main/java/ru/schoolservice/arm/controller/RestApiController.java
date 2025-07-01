@@ -16,6 +16,7 @@ import ru.schoolservice.arm.model.Member;
 import ru.schoolservice.arm.service.DbService;
 import ru.schoolservice.arm.service.InsuranceMemberService;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -42,20 +43,17 @@ public class RestApiController {
 
         final int claimId = 1;
         InsuranceContractOperClaims claim = dbService.getClaimWithInsuranceById(claimId);
-
-
-        ClaimDto claimDto = Mock.createClaimDto(); // Получение DTO из внешнего источника
-
         InsuranceContractDataEntity insuranceContractDataEntity = convertToEntity(Mock.createInsuranceDto());
+        claim.add(insuranceContractDataEntity);
 
         Map<Integer, Member> memberMap = dbService.getMembers(claimId).stream()
                 .collect(Collectors.toMap(Member::getId, m -> m));
 
-        createRiskDtoList().stream()
+        List<InsuranceDetailsDataEntity> list = createRiskDtoList().stream()
                 .map(riskDto -> buildInsuranceDetailsDataEntity(riskDto, memberMap.get(riskDto.getMemberId()), insuranceContractDataEntity))
                 .collect(Collectors.toList());
 
-
+        dbService.save(claim, list);
     }
 
 

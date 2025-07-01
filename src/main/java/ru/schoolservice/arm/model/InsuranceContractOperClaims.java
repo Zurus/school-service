@@ -38,4 +38,10 @@ public class InsuranceContractOperClaims {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "claim_id") // Указываем столбец в таблице employees
     private List<InsuranceContractDataEntity> insuranceContractDataEntities = new ArrayList<>();
+
+
+    public void add(InsuranceContractDataEntity insuranceContractDataEntity) {
+        insuranceContractDataEntities.add(insuranceContractDataEntity);
+        insuranceContractDataEntity.setId(getId());
+    }
 }

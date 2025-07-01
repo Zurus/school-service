@@ -47,7 +47,7 @@ public class Converter {
 
     public static InsuranceContractDataEntity convertToEntity(InsuranceDto dto) {
         InsuranceContractDataEntity entity = new InsuranceContractDataEntity();
-        entity.setId(dto.getId());
+        //entity.setId(dto.getId());
         entity.setValue(dto.getValue());
         entity.setClaimId(dto.getClaimId());
         return entity;
