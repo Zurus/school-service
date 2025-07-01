@@ -44,7 +44,7 @@ public class DbService {
     ) {
         // Проблемная строка - удаление данных перед сохранением основной сущности
         insuranceRepository.deleteAllByClaimId(insuranceContractOperClaims.getId());
-        claimRepository.save(insuranceContractOperClaims);
+        claimRepository.saveAndFlush(insuranceContractOperClaims);
         risksRepository.saveAll(insuranceDetailsDataEntity);
     }
 }

@@ -20,7 +20,7 @@ public class InsuranceDetailsDataEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "insurance_program_id", referencedColumnName = "id")
+    @JoinColumn(name = "insurance_program_id", referencedColumnName = "id", nullable = false)
     private InsuranceContractDataEntity insuranceContractDataEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)

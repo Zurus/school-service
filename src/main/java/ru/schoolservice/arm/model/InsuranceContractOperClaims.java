@@ -42,6 +42,6 @@ public class InsuranceContractOperClaims {
 
     public void add(InsuranceContractDataEntity insuranceContractDataEntity) {
         insuranceContractDataEntities.add(insuranceContractDataEntity);
-        insuranceContractDataEntity.setId(getId());
+        insuranceContractDataEntity.setClaimId(getId());
     }
 }
