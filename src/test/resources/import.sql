@@ -4,14 +4,14 @@ FROM insurance_members;
 DELETE
 FROM members;
 DELETE
-FROM insurances;
+FROM insuranceContractDataEntities;
 DELETE
 FROM claims;
 
 -- Сброс sequence для H2
 ALTER TABLE claims
     ALTER COLUMN id RESTART WITH 1;
-ALTER TABLE insurances
+ALTER TABLE insuranceContractDataEntities
     ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE members
     ALTER COLUMN id RESTART WITH 1;
@@ -25,13 +25,13 @@ INSERT INTO claims (name)
 VALUES ('Заявка 2');
 
 -- Вставка договоров страхования
-# INSERT INTO insurances (value, claim_id)
+# INSERT INTO insuranceContractDataEntities (value, claim_id)
 # VALUES ('Договор 1', 1);
-# INSERT INTO insurances (value, claim_id)
+# INSERT INTO insuranceContractDataEntities (value, claim_id)
 # VALUES ('Договор 2', 1);
-# INSERT INTO insurances (value, claim_id)
+# INSERT INTO insuranceContractDataEntities (value, claim_id)
 # VALUES ('Договор 3', 2);
-# INSERT INTO insurances (value, claim_id)
+# INSERT INTO insuranceContractDataEntities (value, claim_id)
 # VALUES ('Договор 4', 2);
 
 # -- Вставка участников

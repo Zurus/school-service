@@ -3,13 +3,14 @@ package ru.schoolservice.arm.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.schoolservice.arm.model.Insurance;
+import ru.schoolservice.arm.model.InsuranceContractDataEntity;
 
 import java.util.List;
 
-@Transactional(readOnly = true)
 @Repository
-public interface InsuranceRepository extends JpaRepository<Insurance, Integer> {
+public interface InsuranceRepository extends JpaRepository<InsuranceContractDataEntity, Integer> {
 
-    List<Insurance> findByClaimId(Integer claimId);
+    List<InsuranceContractDataEntity> findByClaimId(Integer claimId);
+
+    void deleteAllByClaimId(Integer claimId);
 }

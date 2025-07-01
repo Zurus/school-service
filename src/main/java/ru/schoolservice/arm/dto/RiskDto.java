@@ -12,5 +12,5 @@ import lombok.Setter;
 public class RiskDto {
     private Integer id;
     private String name;
-    private String memberValue;
+    private Integer memberId;
 }

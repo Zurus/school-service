@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.schoolservice.arm.model.Claim;
-import ru.schoolservice.arm.model.Insurance;
+import ru.schoolservice.arm.model.InsuranceContractOperClaims;
+import ru.schoolservice.arm.model.InsuranceContractDataEntity;
 import ru.schoolservice.arm.model.Member;
-import ru.schoolservice.arm.model.Risks;
+import ru.schoolservice.arm.model.InsuranceDetailsDataEntity;
 import ru.schoolservice.arm.repository.ClaimRepository;
 import ru.schoolservice.arm.repository.InsuranceRepository;
 import ru.schoolservice.arm.repository.MemberRepository;
@@ -25,45 +25,26 @@ public class DbService {
     private InsuranceRepository insuranceRepository;
     private RisksRepository risksRepository;
 
-    @Transactional
-    public void saveInsuranceWithRisks(Insurance insurance) {
-        insuranceRepository.save(insurance); // Каскадно сохраняет риски
-    }
 
-    public Claim getClaimWithInsuranceById(Integer id) {
+    public InsuranceContractOperClaims getClaimWithInsuranceById(Integer id) {
         return claimRepository.findClaimWithInsurancesById(id);
     }
-
-    public Claim getClaimById(Integer id) {
-        Claim claim = claimRepository.findById(id).get();
-        return claim;
-    }
-
 
     public List<Member> getMembers(Integer claimId) {
         return memberRepository.findMembersByClaimId(claimId);
     }
 
-    @Transactional
-    public Claim getClaimByIdSave(Integer id) {
-        return claimRepository.getById(id);
-    }
-
-    public List<Insurance> getInsurancesByClaimId(Integer claimId) {
+    public List<InsuranceContractDataEntity> getInsurancesByClaimId(Integer claimId) {
         return insuranceRepository.findByClaimId(claimId);
     }
-
-
-    public List<Risks> getRisksForInsurance(Integer insuranceId) {
-        return null;
-        //return risksRepository.findByInsuranceProgramId(insuranceId);
-    }
-
-    public void save(Insurance insurance) {
-        insuranceRepository.save(insurance);
-    }
-
-    public void save(List<Risks> risks) {
-        risksRepository.saveAll(risks);
+    @Transactional
+    public void save(
+            InsuranceContractOperClaims insuranceContractOperClaims,
+            List<InsuranceDetailsDataEntity> insuranceDetailsDataEntity
+    ) {
+        // Проблемная строка - удаление данных перед сохранением основной сущности
+        insuranceRepository.deleteAllByClaimId(insuranceContractOperClaims.getId());
+        claimRepository.save(insuranceContractOperClaims);
+        risksRepository.saveAll(insuranceDetailsDataEntity);
     }
 }

@@ -3,7 +3,7 @@ package ru.schoolservice.arm.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.schoolservice.arm.model.Insurance;
+import ru.schoolservice.arm.model.InsuranceContractDataEntity;
 import ru.schoolservice.arm.model.Member;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class InsuranceMemberService {
 
 //    private final InsuranceMembersRepository insuranceMembersRepository;
 
-    public void addMembersToInsurance(Insurance insurance, List<Member> members) {
+    public void addMembersToInsurance(InsuranceContractDataEntity insuranceContractDataEntity, List<Member> members) {
 
 //        if (members == null || members.isEmpty()) return;
 //
@@ -45,7 +45,7 @@ public class InsuranceMemberService {
     }
 
 
-    public List<Member> getMembersByInsurance(Insurance insurance) {
+    public List<Member> getMembersByInsurance(InsuranceContractDataEntity insuranceContractDataEntity) {
         return null;
         //return insuranceMembersRepository.findMembersByInsuranceId(insurance.getId());
     }

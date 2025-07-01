@@ -50,11 +50,11 @@ public class Mock {
     }
 
     public static RiskDto createRiskDto1() {
-        return new RiskDto(RISK_ID_1, RISK_NAME_1, MEMBER_VALUE_1);
+        return new RiskDto(RISK_ID_1, RISK_NAME_1, MEMBER_ID_1);
     }
 
     public static RiskDto createRiskDto2() {
-        return new RiskDto(RISK_ID_2, RISK_NAME_2, MEMBER_VALUE_2);
+        return new RiskDto(RISK_ID_2, RISK_NAME_2, MEMBER_ID_2);
     }
 
     public static InsuranceDto createInsuranceDto() {

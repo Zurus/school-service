@@ -5,12 +5,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.schoolservice.arm.model.Claim;
+import ru.schoolservice.arm.model.InsuranceContractOperClaims;
 
 @Transactional(readOnly = true)
 @Repository
-public interface ClaimRepository extends JpaRepository<Claim, Integer> {
+public interface ClaimRepository extends JpaRepository<InsuranceContractOperClaims, Integer> {
 
-    @Query("SELECT DISTINCT c FROM Claim c LEFT JOIN FETCH c.insurances WHERE c.id = :id")
-    Claim findClaimWithInsurancesById(@Param("id") Integer id);
+    @Query("SELECT DISTINCT c FROM InsuranceContractOperClaims c LEFT JOIN FETCH c.insuranceContractDataEntities WHERE c.id = :id")
+    InsuranceContractOperClaims findClaimWithInsurancesById(@Param("id") Integer id);
 }

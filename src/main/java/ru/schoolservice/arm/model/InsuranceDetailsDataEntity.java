@@ -3,8 +3,6 @@ package ru.schoolservice.arm.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +10,7 @@ import java.util.List;
 @Table(name = "risks")
 @Getter
 @Setter
-public class Risks {
+public class InsuranceDetailsDataEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +21,7 @@ public class Risks {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insurance_program_id", referencedColumnName = "id")
-    private Insurance insurance;
+    private InsuranceContractDataEntity insuranceContractDataEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
