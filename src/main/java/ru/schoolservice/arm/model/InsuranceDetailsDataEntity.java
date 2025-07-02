@@ -26,5 +26,4 @@ public class InsuranceDetailsDataEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private Member member;
-
 }

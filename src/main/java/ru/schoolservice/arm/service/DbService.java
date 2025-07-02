@@ -37,14 +37,14 @@ public class DbService {
     public List<InsuranceContractDataEntity> getInsurancesByClaimId(Integer claimId) {
         return insuranceRepository.findByClaimId(claimId);
     }
+
+
     @Transactional
     public void save(
             InsuranceContractOperClaims insuranceContractOperClaims,
             List<InsuranceDetailsDataEntity> insuranceDetailsDataEntity
     ) {
         // Проблемная строка - удаление данных перед сохранением основной сущности
-        insuranceRepository.deleteAllByClaimId(insuranceContractOperClaims.getId());
-        claimRepository.saveAndFlush(insuranceContractOperClaims);
-        risksRepository.saveAll(insuranceDetailsDataEntity);
+        claimRepository.save(insuranceContractOperClaims);
     }
 }

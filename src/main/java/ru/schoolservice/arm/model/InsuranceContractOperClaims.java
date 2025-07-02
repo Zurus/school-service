@@ -17,7 +17,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,13 +37,17 @@ public class InsuranceContractOperClaims {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "claim_id") // Указываем столбец в таблице employees
-    private List<InsuranceContractDataEntity> insuranceContractDataEntities = new ArrayList<>();
+    @OneToMany(
+            mappedBy = "claimId",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true
+    ) // Указываем столбец в таблице employees
+    private Set<InsuranceContractDataEntity> insuranceContractDataEntities = new HashSet<>();
 
 
     public void add(InsuranceContractDataEntity insuranceContractDataEntity) {
         insuranceContractDataEntities.add(insuranceContractDataEntity);
-        insuranceContractDataEntity.setClaimId(getId());
+        insuranceContractDataEntity.setClaimId(this);
     }
 }

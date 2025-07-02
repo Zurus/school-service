@@ -39,7 +39,7 @@ public class Converter {
         InsuranceDto dto = new InsuranceDto();
         dto.setId(insuranceContractDataEntity.getId());
         dto.setValue(insuranceContractDataEntity.getValue());
-        dto.setClaimId(insuranceContractDataEntity.getClaimId());
+        dto.setClaimId(insuranceContractDataEntity.getClaimId().getId());
         dto.setMembers(members);
         dto.setRiskDtos(risks);
         return dto;
@@ -49,7 +49,7 @@ public class Converter {
         InsuranceContractDataEntity entity = new InsuranceContractDataEntity();
         //entity.setId(dto.getId());
         entity.setValue(dto.getValue());
-        entity.setClaimId(dto.getClaimId());
+        //entity.setClaimId(dto.getClaimId());
         return entity;
     }
 
@@ -81,7 +81,7 @@ public class Converter {
 
     public static InsuranceDetailsDataEntity convertToEntity(RiskDto dto) {
         InsuranceDetailsDataEntity entity = new InsuranceDetailsDataEntity();
-        entity.setId(dto.getId());
+        //entity.setId(dto.getId());
         entity.setName(dto.getName());
         return entity;
     }

@@ -28,6 +28,7 @@ import static ru.schoolservice.arm.converters.Converter.convertToEntity;
 @AllArgsConstructor
 public class RestApiController {
     public final static String REQUEST = "/get";
+    public final static String REQUEST2 = "/get1";
 
     private DbService dbService;
     private InsuranceMemberService insuranceMemberService;
@@ -38,11 +39,30 @@ public class RestApiController {
         return "KEY";
     }
 
+    @RequestMapping(value = REQUEST2, method = RequestMethod.GET)
+    public String getUser2() {
+        scenatio2();
+        return "KEY";
+    }
+
+
+    public void scenatio2() {
+
+        final int claimId = 1;
+        InsuranceContractOperClaims claim = dbService.getClaimWithInsuranceById(claimId);
+
+        claim.getInsuranceContractDataEntities().stream().findFirst().get().getRisks().clear();
+        claim.getInsuranceContractDataEntities().clear();
+
+
+    }
+
     public void scenario1() {
         log.info("Processing claim...");
 
         final int claimId = 1;
         InsuranceContractOperClaims claim = dbService.getClaimWithInsuranceById(claimId);
+        claim.getInsuranceContractDataEntities().clear();
         InsuranceContractDataEntity insuranceContractDataEntity = convertToEntity(Mock.createInsuranceDto());
         claim.add(insuranceContractDataEntity);
 
@@ -62,7 +82,7 @@ public class RestApiController {
                                                                              InsuranceContractDataEntity insuranceContractDataEntity) {
         InsuranceDetailsDataEntity insuranceDetailsDataEntity = convertToEntity(riskDto);
         insuranceDetailsDataEntity.setMember(member);
-        insuranceDetailsDataEntity.setInsuranceContractDataEntity(insuranceContractDataEntity);
+        insuranceContractDataEntity.addRisk(insuranceDetailsDataEntity);
         return insuranceDetailsDataEntity;
     }
 }

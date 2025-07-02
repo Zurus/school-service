@@ -7,7 +7,6 @@ import ru.schoolservice.arm.model.Member;
 
 import java.util.List;
 
-@Transactional(readOnly = true)
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
