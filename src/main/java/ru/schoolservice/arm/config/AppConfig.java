@@ -1,25 +1,20 @@
 package ru.schoolservice.arm.config;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManagerFactory;
 import java.sql.SQLException;
 
 @Configuration
-@Slf4j
+@EnableTransactionManagement
 public class AppConfig {
 
-    /*
-    @Bean(initMethod = "start", destroyMethod = "stop")
-    public Server h2WebServer() throws SQLException {
-        return Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082");
+    @Bean
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
     }
-*/
-//
-//    @Bean(initMethod = "start", destroyMethod = "stop")
-//    public Server h2Server() throws SQLException {
-//        log.info("Start H2 TCP server");
-//        return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092");
-//    }
 }

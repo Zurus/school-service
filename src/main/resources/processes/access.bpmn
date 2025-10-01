@@ -7,15 +7,15 @@
     <bpmn:endEvent id="Event_0sau8cs">
       <bpmn:incoming>Flow_1hw9h3v</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1hw9h3v" sourceRef="Activity_0qz0oa2" targetRef="Event_0sau8cs" />
-    <bpmn:serviceTask id="Activity_0qz0oa2" camunda:class="ru.schoolservice.arm.delegate.SampleDelegate">
+    <bpmn:sequenceFlow id="Flow_1hw9h3v" sourceRef="SampleDelegateST" targetRef="Event_0sau8cs" />
+    <bpmn:serviceTask id="SampleDelegateST" camunda:asyncBefore="true" camunda:delegateExpression="#{sampleDelegate}">
       <bpmn:incoming>Flow_04nxqq1</bpmn:incoming>
       <bpmn:outgoing>Flow_1hw9h3v</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:startEvent id="Event_1sczgu7">
       <bpmn:outgoing>Flow_04nxqq1</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="Flow_04nxqq1" sourceRef="Event_1sczgu7" targetRef="Activity_0qz0oa2" />
+    <bpmn:sequenceFlow id="Flow_04nxqq1" sourceRef="Event_1sczgu7" targetRef="SampleDelegateST" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0zglrxb">
@@ -33,7 +33,7 @@
       <bpmndi:BPMNShape id="Event_0sau8cs_di" bpmnElement="Event_0sau8cs">
         <dc:Bounds x="522" y="152" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_131rgyq_di" bpmnElement="Activity_0qz0oa2">
+      <bpmndi:BPMNShape id="Activity_131rgyq_di" bpmnElement="SampleDelegateST">
         <dc:Bounds x="370" y="130" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1sczgu7_di" bpmnElement="Event_1sczgu7">

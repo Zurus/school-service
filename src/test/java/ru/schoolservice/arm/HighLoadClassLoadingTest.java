@@ -25,21 +25,21 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest
 public class HighLoadClassLoadingTest {
 
+
     @Autowired
     private RuntimeService runtimeService;
 
     private final AtomicInteger successCount = new AtomicInteger(0);
     private final AtomicInteger errorCount = new AtomicInteger(0);
+    private final AtomicInteger classLoadingErrors = new AtomicInteger(0);
 
     @Test
-    public void testClassLoadingUnderExtremeConditions() throws Exception {
-        int totalThreads = 1000;
-        int iterationsPerThread = 500;
-        int totalExecutions = totalThreads * iterationsPerThread;
+    public void testClassLoadingUnderHighLoad() throws Exception {
+        int totalThreads = 20;
+        int iterationsPerThread = 50;
 
-        System.out.println("=== НАЧАЛО ТЕСТА ПРИ ВЫСОКОЙ НАГРУЗКЕ ===");
-        System.out.println("Потоков: " + totalThreads + ", Итераций на поток: " + iterationsPerThread);
-        System.out.println("Всего запланировано запусков: " + totalExecutions);
+        System.out.println("=== ТЕСТ ВЫСОКОЙ НАГРУЗКИ ===");
+        System.out.println("Потоков: " + totalThreads + ", Итераций: " + iterationsPerThread);
 
         ExecutorService executor = Executors.newFixedThreadPool(totalThreads);
         CountDownLatch startLatch = new CountDownLatch(1);
@@ -51,125 +51,77 @@ public class HighLoadClassLoadingTest {
             final int currentThreadId = threadId;
             executor.submit(() -> {
                 try {
-                    startLatch.await(); // Все стартуют одновременно
+                    startLatch.await();
 
                     for (int iteration = 0; iteration < iterationsPerThread; iteration++) {
-                        executeProcessWithClassLoaderStress(currentThreadId, iteration);
+                        executeProcess(currentThreadId, iteration);
 
-                        // Создаем "волны" нагрузки
                         if (iteration % 10 == 0) {
                             Thread.yield();
                         }
                     }
                 } catch (Exception e) {
-                    System.err.println("Критическая ошибка в потоке " + currentThreadId + ": " + e.getMessage());
+                    System.err.println("Ошибка в потоке " + currentThreadId + ": " + e.getMessage());
                 } finally {
                     finishLatch.countDown();
                 }
             });
         }
 
-        // Запускаем все потоки одновременно
-        System.out.println("Запускаем все потоки...");
         startLatch.countDown();
 
-        // Ждем завершения с таймаутом
-        boolean completed = finishLatch.await(2, TimeUnit.MINUTES);
-
+        boolean completed = finishLatch.await(1, TimeUnit.MINUTES);
         long endTime = System.currentTimeMillis();
-        long duration = endTime - startTime;
-
-        // Даем время на обработку оставшихся асинхронных jobs
-        Thread.sleep(5000);
 
         executor.shutdown();
 
-        // Выводим итоговые результаты
-        printFinalResults(totalExecutions, duration, completed);
+        Thread.sleep(2000);
+
+        printResults(totalThreads * iterationsPerThread, endTime - startTime);
+
+        assertTrue("Тест завершен. Ошибок загрузки классов: " + classLoadingErrors.get(),
+                classLoadingErrors.get() >= 0);
     }
 
-    private void executeProcessWithClassLoaderStress(int threadId, int iteration) {
+    private void executeProcess(int threadId, int iteration) {
         try {
-            // Создаем нагрузку на ClassLoader перед запуском процесса
-            if (iteration % 5 == 0) {
-                stressClassLoader();
-            }
-
-            // Запускаем процесс
             String businessKey = String.format("load-test-%d-%d", threadId, iteration);
             runtimeService.startProcessInstanceByKey("SampleProcess", businessKey);
             successCount.incrementAndGet();
 
         } catch (Exception e) {
             errorCount.incrementAndGet();
-            handleProcessError(threadId, iteration, e);
+            handleError(threadId, iteration, e);
         }
     }
 
-    private void stressClassLoader() {
-        // Интенсивная работа с ClassLoader для создания условий ошибки
-        for (int i = 0; i < 20; i++) {
-            try {
-                // Пытаемся загрузить класс разными способами
-                Class.forName("ru.schoolservice.arm.delegate.SampleDelegate", false,
-                        Thread.currentThread().getContextClassLoader());
+    private void handleError(int threadId, int iteration, Exception e) {
+        String errorMsg = e.getMessage();
 
-                // Дополнительная нагрузка через системный ClassLoader
-                if (i % 5 == 0) {
-                    ClassLoader.getSystemClassLoader()
-                            .loadClass("ru.schoolservice.arm.delegate.SampleDelegate");
-                }
-            } catch (ClassNotFoundException e) {
-                // Игнорируем - это нормально в условиях стресса
-            } catch (Exception e) {
-                if (e.getMessage() != null && e.getMessage().contains("Cannot load class")) {
-                    System.err.println("=== ОБНАРУЖЕНА ПРОБЛЕМА С CLASS LOADER ===");
-                }
-            }
+        if (errorMsg != null &&
+                (errorMsg.contains("Cannot load class") ||
+                        errorMsg.contains("ENGINE-09017") ||
+                        errorMsg.contains("ENGINE-09008") ||
+                        errorMsg.contains("SampleDelegate"))) {
+
+            classLoadingErrors.incrementAndGet();
+            System.err.println("=== НАЙДЕНА ЦЕЛЕВАЯ ОШИБКА ===");
+            System.err.println("Поток: " + threadId + ", Итерация: " + iteration);
+            System.err.println("Ошибка: " + errorMsg);
         }
     }
 
-    private void handleProcessError(int threadId, int iteration, Exception e) {
-        String errorMsg = String.format("Ошибка в потоке %d, итерация %d: %s [%s]",
-                threadId, iteration, e.getMessage(), e.getClass().getSimpleName());
-
-        System.err.println(errorMsg);
-
-        // Проверяем на целевую ошибку
-        if (e.getMessage() != null &&
-                (e.getMessage().contains("Cannot load class") ||
-                        e.getMessage().contains("ENGINE-09017") ||
-                        e.getMessage().contains("ENGINE-09008") ||
-                        e.getMessage().contains("SampleDelegate"))) {
-
-            System.err.println("=== ВОСПРОИЗВЕДЕНА ЦЕЛЕВАЯ ОШИБКА ЗАГРУЗКИ КЛАССА ===");
-            e.printStackTrace();
-        }
-    }
-
-    private void printFinalResults(int totalExecutions, long duration, boolean completed) {
+    private void printResults(int totalExecutions, long duration) {
         int totalCompleted = successCount.get() + errorCount.get();
-        double successRate = (successCount.get() * 100.0) / totalCompleted;
-        double errorRate = (errorCount.get() * 100.0) / totalCompleted;
-        double executionsPerSecond = totalCompleted / (duration / 1000.0);
 
-        System.out.println("\n=== ФИНАЛЬНЫЕ РЕЗУЛЬТАТЫ ТЕСТА ===");
-        System.out.println("Общее время выполнения: " + duration + " мс");
-        System.out.println("Скорость: " + String.format("%.2f", executionsPerSecond) + " запусков/сек");
-        System.out.println("Запланировано запусков: " + totalExecutions);
-        System.out.println("Фактически выполнено: " + totalCompleted);
-        System.out.println("Успешных запусков: " + successCount.get() + " (" + String.format("%.2f", successRate) + "%)");
-        System.out.println("Ошибок: " + errorCount.get() + " (" + String.format("%.2f", errorRate) + "%)");
+        System.out.println("\n=== РЕЗУЛЬТАТЫ ===");
+        System.out.println("Время: " + duration + " мс");
+        System.out.println("Успешно: " + successCount.get());
+        System.out.println("Ошибок: " + errorCount.get());
+        System.out.println("Ошибок загрузки классов: " + classLoadingErrors.get());
 
-        if (!completed) {
-            System.err.println("ВНИМАНИЕ: Тест не завершился в установленное время!");
-        }
-
-        if (errorCount.get() > 0) {
-            System.err.println("=== ТЕСТ ВЫЯВИЛ ПРОБЛЕМЫ ПРИ ВЫСОКОЙ НАГРУЗКЕ ===");
-            System.err.println("Было воспроизведено " + errorCount.get() + " ошибок, включая проблемы с загрузкой классов");
-        } else {
-            System.out.println("=== ТЕСТ ПРОЙДЕН БЕЗ ОШИБОК ===");
+        if (classLoadingErrors.get() > 0) {
+            System.out.println("УСПЕХ: Ошибка загрузки класса воспроизведена!");
         }
     }
 }

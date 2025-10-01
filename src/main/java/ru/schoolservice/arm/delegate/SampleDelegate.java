@@ -12,14 +12,21 @@ import javax.annotation.PostConstruct;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-@Component
+@Component("sampleDelegate")
 public class SampleDelegate implements JavaDelegate {
 
     private static final Logger logger = LoggerFactory.getLogger(SampleDelegate.class);
 
+    private static int count = 0;
+
     @Autowired
     private RuntimeService runtimeService;
 
+
+    public SampleDelegate() {
+        count++;
+        logger.debug("===Создан объект SampleDelegate count = {} ===", count);
+    }
 
     @PostConstruct
     public void init() {
@@ -28,9 +35,8 @@ public class SampleDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-//        logger.info("=== SampleDelegate запущен ===");
-        logger.info("=== SampleDelegate запущен ===");
-        for (int i = 0; i < 10; i++) {
+        logger.info("=== SampleDelegate запущен (экземпляр делегата: {})", count);
+        for (int i = 0; i < 5; i++) {
             String businessKey = String.format("load-test-%s", i);
             runtimeService.startProcessInstanceByKey("RunnableProcess", businessKey);
         }
