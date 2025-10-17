@@ -10,7 +10,7 @@
     <bpmn:endEvent id="Event_08yfbrw">
       <bpmn:incoming>Flow_007zmk7</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:serviceTask id="SampleDelegateV2ST" camunda:asyncBefore="true" camunda:class="ru.schoolservice.arm.delegate.SampleDelegateV2">
+    <bpmn:serviceTask id="SampleDelegateV2ST" camunda:class="ru.schoolservice.arm.delegate.SampleDelegateV2">
       <bpmn:incoming>Flow_0ehdzx6</bpmn:incoming>
       <bpmn:outgoing>Flow_007zmk7</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -22,13 +22,13 @@
       <bpmndi:BPMNShape id="Participant_0p62kug_di" bpmnElement="Participant_0p62kug" isHorizontal="true">
         <dc:Bounds x="160" y="60" width="600" height="250" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0ehdzx6_di" bpmnElement="Flow_0ehdzx6">
-        <di:waypoint x="288" y="170" />
-        <di:waypoint x="340" y="170" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_007zmk7_di" bpmnElement="Flow_007zmk7">
         <di:waypoint x="440" y="170" />
         <di:waypoint x="492" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ehdzx6_di" bpmnElement="Flow_0ehdzx6">
+        <di:waypoint x="288" y="170" />
+        <di:waypoint x="340" y="170" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_12xcn3k_di" bpmnElement="Event_12xcn3k">
         <dc:Bounds x="252" y="152" width="36" height="36" />

@@ -7,14 +7,19 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
-import java.sql.SQLException;
 
 @Configuration
 @EnableTransactionManagement
 public class AppConfig {
 
+
     @Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
         return new JpaTransactionManager(emf);
     }
+//
+//    @Bean(initMethod = "start", destroyMethod = "stop")
+//    public Server h2Server() throws SQLException {
+//        return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092");
+//    }
 }

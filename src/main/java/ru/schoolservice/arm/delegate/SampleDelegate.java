@@ -35,6 +35,7 @@ public class SampleDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
+        execution.setVariable("Sopranos", "Sopranos");
         logger.info("=== SampleDelegate запущен (экземпляр делегата: {})", count);
         for (int i = 0; i < 5; i++) {
             String businessKey = String.format("load-test-%s", i);

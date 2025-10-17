@@ -35,8 +35,8 @@ public class HighLoadClassLoadingTest {
 
     @Test
     public void testClassLoadingUnderHighLoad() throws Exception {
-        int totalThreads = 20;
-        int iterationsPerThread = 50;
+        int totalThreads = 200;
+        int iterationsPerThread = 500;
 
         System.out.println("=== ТЕСТ ВЫСОКОЙ НАГРУЗКИ ===");
         System.out.println("Потоков: " + totalThreads + ", Итераций: " + iterationsPerThread);

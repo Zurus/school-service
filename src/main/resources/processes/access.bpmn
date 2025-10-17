@@ -22,13 +22,13 @@
       <bpmndi:BPMNShape id="Participant_09555vi_di" bpmnElement="Participant_09555vi" isHorizontal="true">
         <dc:Bounds x="160" y="60" width="600" height="250" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_1hw9h3v_di" bpmnElement="Flow_1hw9h3v">
-        <di:waypoint x="470" y="170" />
-        <di:waypoint x="522" y="170" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_04nxqq1_di" bpmnElement="Flow_04nxqq1">
         <di:waypoint x="278" y="170" />
         <di:waypoint x="370" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hw9h3v_di" bpmnElement="Flow_1hw9h3v">
+        <di:waypoint x="470" y="170" />
+        <di:waypoint x="522" y="170" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0sau8cs_di" bpmnElement="Event_0sau8cs">
         <dc:Bounds x="522" y="152" width="36" height="36" />
