@@ -1,7 +1,5 @@
 server:
   port: 8989
-  servlet:
-    context-path: /
 
 spring:
   datasource:
@@ -9,19 +7,16 @@ spring:
     username: accreditive_service_excamad
     password: accreditive_service_excamad
     driver-class-name: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 20
   jpa:
     show-sql: true
-    hibernate:
-      ddl-auto: validate  # вместо update для production
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-        jdbc:
-          batch_size: 20
+    hibernate:
+      ddl-auto: update
 
+# Конфигурация Camunda
 camunda:
   bpm:
     admin-user:
@@ -33,5 +28,19 @@ camunda:
     history-level: audit
     job-executor:
       enabled: true
-    filter:
-      create: All tasks
+    jdbc:
+      batch-processing: false
+    webapp:
+      enabled: true
+    rest:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: mappings,health,info
+      base-path: /actuator
+  endpoint:
+    mappings:
+      enabled: true

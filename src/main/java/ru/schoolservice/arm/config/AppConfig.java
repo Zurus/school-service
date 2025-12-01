@@ -20,7 +20,6 @@ public class AppConfig {
         return new JpaTransactionManager(emf);
     }
 
-    //TODO заполнить актуальными кредами базы данных
     @Bean
     public ProcessEngine processEngine() {
         return ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration()
