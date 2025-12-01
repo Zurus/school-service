@@ -1,53 +1,37 @@
 server:
-  port: 8081
+  port: 8989
+  servlet:
+    context-path: /
 
 spring:
   datasource:
-    url: jdbc:postgresql://10.7.118.8:5432/test_cmd
-    username: postgres_dev
-    password: postgres
+    url: jdbc:postgresql://10.7.118.29:5432/efr_14
+    username: accreditive_service_excamad
+    password: accreditive_service_excamad
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: validate  # вместо update для production
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-    hibernate:
-      ddl-auto: update
+        jdbc:
+          batch_size: 20
 
-# Конфигурация Camunda
 camunda:
   bpm:
+    admin-user:
+      id: admin
+      password: admin
     database:
       type: postgres
       schema-update: true
     history-level: audit
     job-executor:
       enabled: true
-    jdbc:
-      batch-processing: false
-
-logging:
-  level:
-    # Детальное логирование Camunda
-    org.camunda.bpm.engine.impl.db.sql: DEBUG
-    org.camunda.bpm.engine.impl.db: TRACE
-    org.camunda.bpm.engine.impl.persistence.entity: TRACE
-
-    # Логирование JDBC
-    org.apache.ibatis: DEBUG
-    java.sql: DEBUG
-    java.sql.Connection: DEBUG
-    java.sql.Statement: DEBUG
-    java.sql.PreparedStatement: DEBUG
-
-    # Hibernate
-    org.hibernate: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type: TRACE
-    org.hibernate.engine.transaction.internal: DEBUG
-
-    # Spring
-    org.springframework.jdbc.core: DEBUG
-    org.springframework.orm.jpa: DEBUG
+    filter:
+      create: All tasks
