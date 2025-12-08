@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.schoolservice.arm.service.DbService;
 
 import java.sql.SQLException;
 
