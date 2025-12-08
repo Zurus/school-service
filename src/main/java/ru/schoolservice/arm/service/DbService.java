@@ -9,6 +9,7 @@ import ru.schoolservice.arm.model.CheckPassportProcessesEntity;
 import ru.schoolservice.arm.repository.CheckPassportProcessesRepository;
 import ru.schoolservice.arm.repository.CheckPassportRepository;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 
 @Service
@@ -18,7 +19,7 @@ public class DbService {
 
     private CheckPassportProcessesRepository checkPassportProcessesRepository;
     private CheckPassportRepository checkPassportRepository;
-
+    private EntityManager entityManager;
 
     // Имитация проблемного метода из боевого проекта
     public CheckPassportEntity findCachedCheckedPassport(String fio, LocalDate birthDate,
@@ -45,17 +46,19 @@ public class DbService {
         return checkPassportRepository.save(saved);
     }
 
-    // Имитация updateProcessors из CheckPassportEprshbDelegate
-    @Transactional
     public void updateProcessors(CheckPassportEntity checkPassportCache, String processId) {
         log.info("Создание CheckPassportProcessesEntity для процесса {}", processId);
+
+//        log.warn("" + entityManager.contains(checkPassportCache));
+//        entityManager.detach(checkPassportCache);
+
 
         CheckPassportProcessesEntity processEntity = new CheckPassportProcessesEntity();
         processEntity.setCheckPassport(checkPassportCache);
         processEntity.setProcessId(processId);
 
-        // Здесь проблема: мы снова сохраняем CheckPassportEntity через каскад или отдельно
-        checkPassportProcessesRepository.save(processEntity);
+
+        checkPassportProcessesRepository.saveAndFlush(processEntity);
     }
 
     public void checkMukhinTheory() {
@@ -63,7 +66,7 @@ public class DbService {
         log.warn("===================== Стартуем ================================================");
 
         checkPassportRepository.findAll().forEach(e -> log.warn(e.toString()));
-        checkPassportProcessesRepository.findAll().forEach(e-> log.warn(e.toString()));
+        checkPassportProcessesRepository.findAll().forEach(e -> log.warn(e.toString()));
 
         log.warn("===================== Сохраняем Ваню  ================================================");
 
@@ -82,11 +85,11 @@ public class DbService {
         entity.setActualizationDate(java.time.LocalDateTime.now());
         entity.setLoadDate(java.time.LocalDateTime.now());
 
-        checkPassportRepository.save(entity);
+        checkPassportRepository.saveAndFlush(entity);
         log.warn("************************************************** сохранили Ваню ***********************************");
 
         checkPassportRepository.findAll().forEach(e -> log.warn(e.toString()));
-        checkPassportProcessesRepository.findAll().forEach(e-> log.warn(e.toString()));
+        checkPassportProcessesRepository.findAll().forEach(e -> log.warn(e.toString()));
 
         log.warn("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  Проверяем каскадный апдейт ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
@@ -94,7 +97,7 @@ public class DbService {
 
         log.warn("+++++++++++++++++++++++++++++++++++++++++++++++++ Обновились каскадно +++++++++++++++++++++++++++++++++++++++++++++++++++++");
         checkPassportRepository.findAll().forEach(e -> log.warn(e.toString()));
-        checkPassportProcessesRepository.findAll().forEach(e-> log.warn(e.toString()));
+        checkPassportProcessesRepository.findAll().forEach(e -> log.warn(e.toString()));
 
     }
 
